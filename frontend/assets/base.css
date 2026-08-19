@@ -1,0 +1,49 @@
+#header{
+    background-color: rgb(0, 0, 0);
+    padding: 1%;
+    border-radius: 50px;
+}
+
+.title{
+    color: aqua;
+}
+
+.logo_1{
+    color: goldenrod;
+    font-size:40px ;
+    font-weight: bold;
+}
+.logo_2{
+    color: aqua;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.header-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.nav-elements{
+    display: flex;
+    gap: 100px;
+}
+
+.nav-elements li{
+    list-style: none;
+   
+}
+.nav-elements li a{
+    text-decoration: none;
+    color: white;
+    padding: 15px;
+}
+
+.nav-elements li a:hover{
+    border-radius: 20%;
+    background-color: grey;
+    transition: 0.5s;
+}
+
+

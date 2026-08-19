@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VlogTravels</title>
+    <link rel="stylesheet" href="assets/base.css">
+    <link rel="stylesheet" href="assets/auth.css">
+    
+</head>
+<body>
+    <header id="header"></header>
+    <main>
+        <section class="login_form">
+            <form id="form" action="/travel/create_travel" method="post">
+                <div class="form-container">
+                    <h1>Create Travel</h1>
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" name="destination">
+                    <label for="activity">Activity</label>
+                    <input type="text" id="activity" name="activity">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" name="price">
+                    <label for="available">Available Seats</label>
+                    <input type="number" id="available" name="available">
+                    <label for="duration">Duration</label>
+                    <input type="number" id="duration" name="duration"> 
+                    <label for="img">Travel image</label>
+                    <input type="file" id="img" name="img"> 
+                    <button id="form-button">Submit</button>
+                </div>
+            </form>        
+        </section>
+        </main>
+    <script src="scripts/components.js"></script>
+    <script src="scripts/create_travel.js"></script>
+</body>
+</html>

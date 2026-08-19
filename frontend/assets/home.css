@@ -1,0 +1,27 @@
+#travels_container{
+    margin: 10px 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+
+}
+
+.tendences_title{
+    text-align: center;
+}
+
+.travel_card{
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    border-radius: 10px;
+    color: white;
+    transition: 0.3s;
+    padding: 2px;
+}
+
+
+
+.travel_card:hover{
+    transform: translateY(-10px);
+}
