@@ -1,5 +1,8 @@
+//Get travels container section
 const travel_section = document.getElementById("travels_container")
 
+
+//Get request to obtain travels
 async function get_travels() {
     const response = await fetch(
         "/travel_maintain/get_travels",
@@ -11,68 +14,54 @@ async function get_travels() {
         }
     )
 
+    //We store the returned data(travels object) and convert it to JSON
     const travels = await response.json()
+    //For each travel object we create a travel card container with mini info
     travels.forEach(travel => {
+        //Create travel_Card container with class "travel_card"
         const card = document.createElement("div")
         card.className = "travel_card"
 
-        /*Card Title*/
-        const card_destination = document.createElement("h2")
-        const destination = document.createElement("p")
+        //little container for info into the card
+        const card_information = document.createElement("div")
+        card_information.className = "card_information"
 
-        card_destination.innerText = "Destination"
-        destination.innerText = travel.destination
+        //Inside the info container we create tittle and button
+        const travel_destination = document.createElement("h2")
+        travel_destination.innerText = travel.destination
 
-        card.appendChild(card_destination)
-        card.appendChild(destination)
+        const travel_button = document.createElement("button")
+        travel_button.innerText = "See more"
+        travel_button.className = "card_button"
 
-         /*Card duration*/
+        //Then create a new container inside the card for image
+        const image_container = document.createElement("div")
+        image_container.className = "card_image"
 
-        const card_duration = document.createElement("h2")
-        const duration = document.createElement("p")
-
-        card_duration.innerText = "Duration"
-        duration.innerText = travel.duration
-
-        card.appendChild(card_duration)
-        card.appendChild(duration)
-
-         /*Card available*/
-
-        const card_available = document.createElement("h2")
-        const available = document.createElement("p")
-
-        card_available.innerText = "Available"
-        available.innerText = travel.available_seats
-
-        card.appendChild(card_available)
-        card.appendChild(available)
-
-         /*Card price*/
-
-        const card_price = document.createElement("h2")
-        const price = document.createElement("p")
-
-        card_price.innerText = "Price"
-        price.innerText = travel.price
-
-        card.appendChild(card_price)
-        card.appendChild(price)
-
-        
-
-        /*Card Image*/
-
-        const card_image = document.createElement("img")
-        card_image.src = `/uploads/${travel.image}`
-
-        card.appendChild(card_image)
+        const image = document.createElement("img")
+        image.src = `uploads/${travel.image}`
+        image_container.append(image)
 
 
+        card_information.append(travel_destination)
+        card_information.append(travel_button)
 
-        travel_section.appendChild(card)
+        card.append(image_container)
+        card.append(card_information)
 
+        //Putting all containers inside the travel section (Main container)
+        travel_section.append(card)
+
+        //When mouse are hover the card(image) this show hidde info
+        image_container.addEventListener("mouseenter", () => {
+            card_information.classList.add("show")
+        })
+        //But when mouse leave the card(image) this info is hidden again
+        image_container.addEventListener("mouseleave", () => {
+            card_information.classList.remove("show")
+        })
     });
+
 }
 
 get_travels()

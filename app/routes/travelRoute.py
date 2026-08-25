@@ -25,8 +25,8 @@ upload_dir.mkdir(exist_ok=True)
 
 #Learn this-------------------------------
 @travels.post("/create_travel")
-def new_travel(destination: str = Form(...), activity: str = Form(...) , price: int = Form(...), available_seats: int = Form(...), duration: int = Form(...), image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
-    if Admin:
+def new_travel(destination: str = Form(...), activity: str = Form(...) , price: int = Form(...), available_seats: int = Form(...), duration: int = Form(...), image: UploadFile = File(...), admin = Depends(get_admin) , db: Session = Depends(get_db)):
+    if admin:
         file_path = upload_dir / image.filename
 
         with file_path.open("wb") as buffer:
@@ -42,6 +42,7 @@ def new_travel(destination: str = Form(...), activity: str = Form(...) , price: 
 
         return create_travel(travel_data, image.filename, db)
     raise AdminRequired()
+    
 #-----------------------------------------------
 
 @travels.post("/reserve_travel")

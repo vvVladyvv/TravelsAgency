@@ -1,18 +1,32 @@
-async function getElements(id, path) {
-    try {
-        const response = await fetch(path);
+async function getElements(header, footer) {
+    
+    //Stored our empty elements
+    const header_container = document.getElementById(header)
+    const footer_container = document.getElementById(footer)
 
-        // Si el servidor da 404, no inyectes el error en el HTML
-        if (!response.ok) {
-            console.error(`Error ${response.status}: No se encontró el archivo en '${path}'`);
+    //Looking for components files and verify if exist
+    try {
+        const header_response = await fetch("header.html");
+        const footer_response = await fetch("footer.html");
+        
+        if (!header_response.ok || !footer_response.ok) {
+            console.error(`Error ${header_response.status}: Files not found`);
             return;
         }
 
-        const html = await response.text();
-        document.getElementById(id).innerHTML = html;
+        //Extract only 'html' text from the components request
+        const header_html = await header_response.text();
+        const footer_html = await footer_response.text();
+
+        //Insert this text in our empty elements
+        header_container.innerHTML = header_html
+        footer_container.innerHTML = footer_html
+
     } catch (error) {
-        console.error("Error al cargar el componente:", error);
+        console.error("Error loading components:", error);
     }
 }
 
-getElements("header", "base.html")
+getElements("header", "footer")
+
+
