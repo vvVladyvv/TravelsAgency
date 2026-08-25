@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="assets/base.css">
+
+</head>
+<body>
+    <header id="header">
+
+    </header>
+
+    <section class="edit_container">
+        <div class="user_edit">
+            <form action="/user_maintain/get_user" method="post">
+                <label for="userId">userId:</label>
+                    <input type="text" name="userId" id="userId" placeholder="Into user ID" required>
+                    <button id="button">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="user_container">
+        
+    </section>
+
+
+
+    <footer id="footer">
+
+    </footer>
+
+    <script src="scripts/components.js"></script>
+    <script src="scripts/users_management.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travels Management</title>
+    <link rel="stylesheet" href="assets/base.css">
+
+</head>
+<body>
+    <header id="header">
+
+    </header>
+
+    <section class="edit_container">
+        <div class="travel_edit">
+            <form action="/travels_maintain/get_user" method="post">
+                <label for="travelId">travelId:</label>
+                    <input type="text" name="travelId" id="travelId" placeholder="Into travel ID" required>
+                    <button id="button">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="travel_container">
+        
+    </section>
+
+
+
+    <footer id="footer">
+
+    </footer>
+
+    <script src="scripts/components.js"></script>
+    <script src="scripts/users_management.js"></script>
+</body>
+</html>

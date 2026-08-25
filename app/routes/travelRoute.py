@@ -55,8 +55,12 @@ def Reserve_Travel(data:Reserve, user_id = Depends(get_current_user), db: Sessio
 def get_travels(db: Session = Depends(get_db)):
     travels = db.query(Travels).all()
     return travels
-    
 
+@travels_maintain.post("/get_travel")
+def get_travel(travel_id: int, admin = Depends(AdminRequired), db: Session = Depends(get_db)):
+    if admin:
+        return db.query(Travels).filter(Travels.id == travel_id).first()
+            
 
 
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException,status
 
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 from app.models.db_user import Users
 from app.schemas.usersSchemas import UserRegister, UserLogin, RegisterResponse, LoginResponse, UserEdit
 from app.database import get_db
@@ -35,6 +36,12 @@ def get_users(user = Depends(get_admin), db: Session = Depends(get_db)):
         user = db.query(Users).all()
         return user
     raise AdminRequired()
+
+@user_maintain.post("/get_user")
+def get_user(user_id: int, admin = Depends(AdminRequired), db: Session = Depends(get_db)):
+    if admin:
+        return db.query(Users).filter(Users.id == user_id).first()
+                
 
 @user_maintain.put("/edit_user")
 def edit_user(data: UserEdit, Admin = Depends(get_admin), db: Session = Depends(get_db)):
