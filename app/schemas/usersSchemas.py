@@ -59,7 +59,7 @@ class UserEdit(User):
 #------- OUTPUT SCHEMA----------------------
 
 
-class RegisterResponse(BaseModel):
+class UserResponse(BaseModel):
    username: str
    email: str
 

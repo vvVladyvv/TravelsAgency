@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException,status
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.models.db_user import Users
-from app.schemas.usersSchemas import UserRegister, UserLogin, RegisterResponse, LoginResponse, UserEdit
+from app.schemas.usersSchemas import UserRegister, UserLogin, UserResponse, LoginResponse, UserEdit
 from app.database import get_db
 from app.services.usersServices import add_new_user, verified_user, user_edit, admin_role
 from app.security.authorization import get_current_user, get_admin
@@ -20,7 +20,7 @@ user_tools = UserRepository()
 async def read_index():
     return FileResponse("index.html")
 
-@user.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
+@user.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register_user(data: UserRegister, db: Session = Depends(get_db)):
     user = add_new_user(data, db)
     return user
@@ -30,20 +30,21 @@ def login_user(data: UserLogin, db: Session = Depends(get_db)):
     token = verified_user(data, db)
     return token
 
-@user_maintain.get("/get_users")
-def get_users(user = Depends(get_admin), db: Session = Depends(get_db)):
-    if user:
+@user_maintain.get("/get_users", response_model=list[UserResponse])
+def get_users(Admin = Depends(get_admin), db: Session = Depends(get_db)):
+    if Admin:
         user = db.query(Users).all()
         return user
     raise AdminRequired()
 
-@user_maintain.post("/get_user")
+
+@user_maintain.post("/get_user", response_model=UserResponse)
 def get_user(user_id: int, admin = Depends(AdminRequired), db: Session = Depends(get_db)):
     if admin:
         return db.query(Users).filter(Users.id == user_id).first()
-                
+             
 
-@user_maintain.put("/edit_user")
+@user_maintain.put("/edit_user", response_model=UserResponse)
 def edit_user(data: UserEdit, Admin = Depends(get_admin), db: Session = Depends(get_db)):
     if Admin:
         user = user_edit(data, db)
@@ -51,7 +52,7 @@ def edit_user(data: UserEdit, Admin = Depends(get_admin), db: Session = Depends(
     raise AdminRequired()
 
 
-@user_maintain.delete("/delete_user")
+@user_maintain.delete("/delete_user", response_model=UserResponse)
 def delete_user(id: int, Admin = Depends(get_admin), db: Session = Depends(get_db)):
     if Admin:
         user = user_tools.found_user_by_id(id, db)

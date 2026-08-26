@@ -12,25 +12,50 @@ from app.security.authorization import get_current_user, get_admin
 from app.services.travelServices import create_travel, travel_edit
 from app.services.booking_services import reserve_travel 
 from app.exceptions.userExceptions import AdminRequired
-from app.repositories.Users_repositories import UserRepository
+from app.repositories.Travels_repositories import TravelRepository
 
 
 
-user_repository = UserRepository()
+travel_repository = TravelRepository()
 travels = APIRouter(prefix="/travel", tags=["Travels Service"])
 travels_maintain = APIRouter(prefix="/travel_maintain", tags=["Travels Maintain"])
 
+
+#Create a path object and if not exist create uploads folder
 upload_dir = Path("uploads")
 upload_dir.mkdir(exist_ok=True)
 
 #Learn this-------------------------------
 @travels.post("/create_travel")
-def new_travel(destination: str = Form(...), activity: str = Form(...) , price: int = Form(...), available_seats: int = Form(...), duration: int = Form(...), image: UploadFile = File(...), admin = Depends(get_admin) , db: Session = Depends(get_db)):
+async def new_travel(destination: str = Form(...), activity: str = Form(...) , price: int = Form(...), available_seats: int = Form(...), duration: int = Form(...), image: UploadFile = File(...), admin = Depends(get_admin) , db: Session = Depends(get_db)):
     if admin:
-        file_path = upload_dir / image.filename
+        max_size = 5 + (1024 * 1024)
+        size = await image.read()
+        if len(size) > max_size:
+            raise HTTPException(
+                status_code=413,
+                detail="File too large"
+            )
+        #FIrst extract extension from the file and then generate and uuid and mix it with our extension
+        extension = Path(image.filename).suffix
+        if extension not in [".jpg", ".png", ".jpeg"]:
+            raise HTTPException(
+                status_code=400,
+                detail="Format supported is (.jpg, .jpeg, .png)"
+            )
+        unique_name = f"{uuid.uuid4()}{extension}"
 
+        #Create a file path for can access
+        file_path = upload_dir / unique_name
+
+
+
+        #then we open the content with "wb" paremeters for can write in binary mode
         with file_path.open("wb") as buffer:
+            #Extract the binary code inside our upload image, and paste it inside our new image
             shutil.copyfileobj(image.file, buffer)
+
+       
 
         travel_data = CreateTravel(
             destination=destination,
@@ -65,22 +90,22 @@ def get_travel(travel_id: int, admin = Depends(AdminRequired), db: Session = Dep
 
 
 @travels_maintain.put("/edit_travel")
-def edit_user(data: TravelEdit, Admin = Depends(get_admin), db: Session = Depends(get_db)):
+def edit_travel(data: TravelEdit, Admin = Depends(get_admin), db: Session = Depends(get_db)):
     if Admin:
-        user = travel_edit(data, db)
-        return user
+        travel = travel_edit(data, db)
+        return travel
     raise AdminRequired()
 
 @travels_maintain.delete("/delete_travel")
-def delete_user(id: int, Admin = Depends(get_admin), db: Session = Depends(get_db)):
+def delete_travel(id: int, Admin = Depends(get_admin), db: Session = Depends(get_db)):
     if Admin:
-        user = user_repository.found_user_by_id(id, db)
-        if user:
-            db.delete(user)
+        travel = TravelRepository.search_travel_by_id(id, db)
+        if travel:
+            db.delete(travel)
             db.commit()
 
-            return user
-        raise HTTPException(status_code=404, detail="User was not found")
+            return travel
+        raise HTTPException(status_code=404, detail="Travel was not found")
     raise AdminRequired()
     
 
