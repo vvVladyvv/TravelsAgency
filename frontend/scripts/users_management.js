@@ -15,5 +15,5 @@ search_button.addEventListener("click",async (e) =>{
         }
         )
     const user_data = await response.json()
-    console.log(user_data)
+    
 })
