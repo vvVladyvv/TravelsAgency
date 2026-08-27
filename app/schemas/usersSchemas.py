@@ -60,9 +60,12 @@ class UserEdit(User):
 
 
 class UserResponse(BaseModel):
+   id: int
    username: str
    email: str
-
+   age: int
+   role: str
+   image: str
 
 class LoginResponse(BaseModel):
     message: str
