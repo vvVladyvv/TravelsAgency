@@ -10,6 +10,7 @@ class Users(Base):
     email = Column(String[255], unique=True, nullable=False)
     password = Column(String[255], nullable=False)
     role = Column(String, server_default="user", nullable=False)
+    image = Column(String, server_default="user.png", nullable=True)
 
     booking = relationship("Bookings", back_populates="user")
 
