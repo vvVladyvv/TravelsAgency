@@ -39,10 +39,11 @@ def get_users(Admin = Depends(get_admin), db: Session = Depends(get_db)):
 
 
 @user_maintain.post("/get_user", response_model=UserResponse)
-def get_user(user_id: int, admin = Depends(AdminRequired), db: Session = Depends(get_db)):
+def get_user(user_id: int, admin = Depends(get_admin), db: Session = Depends(get_db)):
     if admin:
-        return db.query(Users).filter(Users.id == user_id).first()
-             
+        user = user_tools.found_user_by_id(user_id, db)
+        return user
+    raise AdminRequired()
 
 @user_maintain.put("/edit_user", response_model=UserResponse)
 def edit_user(data: UserEdit, Admin = Depends(get_admin), db: Session = Depends(get_db)):
