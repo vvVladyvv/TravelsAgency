@@ -1,12 +1,13 @@
 const user_container = document.getElementById("user_container")
-
+const edit_btn = document.getElementById("edit_btn")
+const delete_btn = document.getElementById("delete_btn")
 const search_button = document.getElementById("button")
 
 
 
 search_button.addEventListener("click", async (e) => {
     e.preventDefault()
-    const userId = Number(document.getElementById("userId").value);
+    const userId = document.getElementById("userId").value
     const token = localStorage.getItem("token")
     const response = await fetch(`/user_maintain/get_user?user_id=${userId}`,
         {
@@ -22,7 +23,7 @@ search_button.addEventListener("click", async (e) => {
     //Container for user information
     const user_card = document.createElement("div")
     user_card.className = "user_card"
-  
+
     //Create image for user
     const image_container = document.createElement("div")
     image_container.className = "image_container"
@@ -86,8 +87,24 @@ search_button.addEventListener("click", async (e) => {
     user_card.append(info_container)
     user_container.append(user_card)
 
-
+    delete_user(userId, token)
 
 
 })
 
+
+async function delete_user(userId, token) {
+    delete_btn.addEventListener("click", async (e) => {
+        e.preventDefault()
+
+        const response = await fetch(
+            `/user_maintain/delete_user?id=${userId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        )
+    })
+}

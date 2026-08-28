@@ -27,4 +27,31 @@
 }
 
 
+/*User Management info*/ 
+.user_card{
+    background-color: orange;
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    height: auto;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.image_container{
+    width: 70%;
+    height: fit-content;
+    border: 2px solid;
+    border-radius: 20px;
+}
+.image_container img{
+    width: 100%;
+}
+
+.info_container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+
 
