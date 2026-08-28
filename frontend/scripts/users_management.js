@@ -18,6 +18,9 @@ search_button.addEventListener("click", async (e) => {
         }
     )
     const user_data = await response.json()
+    if (response.ok){
+        delete_btn.disabled = false
+    }
     console.log(user_data)
 
     //Container for user information
@@ -86,6 +89,7 @@ search_button.addEventListener("click", async (e) => {
     user_card.append(image_container)
     user_card.append(info_container)
     user_container.append(user_card)
+
 
     delete_user(userId, token)
 

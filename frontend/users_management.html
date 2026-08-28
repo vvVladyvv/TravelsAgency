@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
     <link rel="stylesheet" href="assets/base.css">
+    <link rel="stylesheet" href="assets/auth.css">
 
 </head>
+
 <body>
     <header id="header">
 
     </header>
 
-    <section class="edit_container">
-        <div class="user_edit">
+    <section class="search_container">
+        <div class="user_search">
             <form action="/user_maintain/get_user" method="post">
                 <label for="userId">userId:</label>
-                    <input type="text" name="userId" id="userId" placeholder="Into user ID" required>
-                    <button id="button">Search</button>
+                <input type="text" name="userId" id="userId" placeholder="Into user ID" required>
+                <button id="button">Search</button>
             </form>
         </div>
     </section>
 
     <section id="user_container">
-        
+        <div class="admin_operation">
+            <button disabled id="delete_btn">Delete user</button>
+            <button disabled id="edit_btn">Edit user</button>
+        </div>
     </section>
 
 
@@ -35,4 +41,5 @@
     <script src="scripts/components.js"></script>
     <script src="scripts/users_management.js"></script>
 </body>
+
 </html>
