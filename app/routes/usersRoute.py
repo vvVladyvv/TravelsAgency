@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile, File
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select
 from app.models.db_user import Users
 from app.schemas.usersSchemas import UserRegister, UserLogin, UserResponse, LoginResponse, UserEdit
 from app.database import get_db
-from app.services.usersServices import add_new_user, verified_user, user_edit, admin_role
+from app.services.usersServices import add_new_user, verified_user, admin_role
 from app.security.authorization import get_current_user, get_admin
+from app.security.hashing import hashed_password
 from fastapi.responses import FileResponse
-from app.exceptions.userExceptions import AdminRequired
+from app.exceptions.userExceptions import AdminRequired, UserNotFound
 from app.repositories.Users_repositories import UserRepository
 
 
@@ -46,10 +46,25 @@ def get_user(user_id: int, admin = Depends(get_admin), db: Session = Depends(get
     raise AdminRequired()
 
 @user_maintain.put("/edit_user", response_model=UserResponse)
-def edit_user(data: UserEdit, Admin = Depends(get_admin), db: Session = Depends(get_db)):
+def edit_user(userId: int = Form(...), new_username: str = Form(...), new_age: int = Form(...), new_email: str = Form(...), new_password: str = Form(...), new_image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
     if Admin:
-        user = user_edit(data, db)
-        return user
+        new_user = UserRegister(
+            username=new_username,
+            age=new_age,
+            email=new_email,
+            password=new_password
+        )
+        check = user_tools.found_user_by_id(userId, db)
+        if check:
+            check.username = new_user.username
+            check.age = new_user.age
+            check.email = new_user.email
+            check.password = hashed_password(new_user.password)
+
+            db.commit()
+            db.refresh(check)
+        raise UserNotFound()
+
     raise AdminRequired()
 
 
