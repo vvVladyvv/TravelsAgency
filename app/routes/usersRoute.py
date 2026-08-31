@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile, File
-
+from pathlib import Path
+import uuid
+import shutil
 from sqlalchemy.orm import Session
 from app.models.db_user import Users
 from app.schemas.usersSchemas import UserRegister, UserLogin, UserResponse, LoginResponse, UserEdit
@@ -16,13 +18,33 @@ user = APIRouter(prefix='/user', tags=["User services"])
 user_maintain = APIRouter(prefix='/user_maintain', tags=["User Maintain"])
 user_tools = UserRepository()
 
+upload_path = Path("uploads")
+upload_path.mkdir(exist_ok=True)
+
 @user.get("/")
 async def read_index():
     return FileResponse("index.html")
 
 @user.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def register_user(data: UserRegister, db: Session = Depends(get_db)):
-    user = add_new_user(data, db)
+def register_user(username: str = Form(...), age: int = Form(...), email: str = Form(...), password: str = Form(...), image: UploadFile = File(...), db: Session = Depends(get_db)):
+
+    extension = Path(image.filename).suffix
+    image_uuid = f"{uuid.uuid4()}{extension}"
+
+    image_path = upload_path / image_uuid
+
+    with image_path.open("wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+
+    new_user = UserRegister(
+        username=username,
+        age=age,
+        email=email,
+        password=password
+    )
+
+    user = add_new_user(new_user, image_uuid, db)
     return user
 
 @user.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
@@ -47,22 +69,37 @@ def get_user(user_id: int, admin = Depends(get_admin), db: Session = Depends(get
 
 @user_maintain.put("/edit_user", response_model=UserResponse)
 def edit_user(userId: int = Form(...), new_username: str = Form(...), new_age: int = Form(...), new_email: str = Form(...), new_password: str = Form(...), new_image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
+
+
     if Admin:
-        new_user = UserRegister(
-            username=new_username,
-            age=new_age,
-            email=new_email,
-            password=new_password
-        )
-        check = user_tools.found_user_by_id(userId, db)
-        if check:
-            check.username = new_user.username
-            check.age = new_user.age
-            check.email = new_user.email
-            check.password = hashed_password(new_user.password)
+        user = user_tools.found_user_by_id(userId, db)
+        if user:
+            new_user = UserRegister(
+                        username=new_username,
+                        age=new_age,
+                        email=new_email,
+                        password=new_password
+                    )
+            
+            older_img_name = user.image
+            older_img_path = upload_path / older_img_name
+
+            extension = Path(new_image.filename).suffix
+            uuid_image = f"{uuid.uuid4()}{extension}"
+
+            file_path = upload_path / uuid_image
+            with file_path.open("wb") as buffer:
+                shutil.copyfileobj(new_image.file, buffer)
+         
+            user.username = new_user.username
+            user.age = new_user.age
+            user.email = new_user.email
+            user.password = hashed_password(new_user.password)
+            user.image = uuid_image
 
             db.commit()
-            db.refresh(check)
+            db.refresh(user)
+            return user
         raise UserNotFound()
 
     raise AdminRequired()
