@@ -92,7 +92,7 @@ search_button.addEventListener("click", async (e) => {
 
 
     delete_user(userId, token)
-
+    
 
 })
 
@@ -111,4 +111,34 @@ async function delete_user(userId, token) {
             }
         )
     })
+}
+
+async function edit_user(userId, token) {
+
+    const new_data = FormData() 
+    const new_username = document.getElementById("n_username").value
+    const new_age = document.getElementById("n_age").value
+    const new_email = document.getElementById("n_email").value
+    const new_password = document.getElementById("n_password").value
+    const new_image = document.getElementById("n_image").file[0]
+
+    
+    new_data.append("new_username", new_username)
+    new_data.append("new_age", new_age)
+    new_data.append("new_email", new_email)
+    new_data.append("new_password", new_password)
+    new_data.append("new_image", new_image)
+
+
+
+    const response = await fetch(
+        "/user_maintain/edit_user",
+        {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            body: new_data
+        }
+    )
 }

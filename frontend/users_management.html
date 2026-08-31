@@ -15,8 +15,8 @@
 
     </header>
 
-    <section class="search_container">
-        <div class="user_search">
+    <section class="user_search">
+        <div class="search_container">
             <form action="/user_maintain/get_user" method="post">
                 <label for="userId">userId:</label>
                 <input type="text" name="userId" id="userId" placeholder="Into user ID" required>
@@ -30,6 +30,24 @@
             <button disabled id="delete_btn">Delete user</button>
             <button disabled id="edit_btn">Edit user</button>
         </div>
+    </section>
+
+    <section id="user_edit">
+        <form action="/user_maintain/edit_user" method="post"></form>
+        <label for="n_username">New Username: </label>
+        <input type="text" name="n_username" id="n_username">
+
+        <label for="n_age">New Age: </label>
+        <input type="number" name="n_age" id="n_age">
+
+        <label for="n_email">New Email</label>
+        <input type="email" name="n_email" id="n_email">
+
+        <label for="n_password">New Password</label>
+        <input type="password" name="n_password" id="n_password">
+
+        <label for="n_image">New Image</label>
+        <input type="file" name="n_image" id="n_image">
     </section>
 
 
