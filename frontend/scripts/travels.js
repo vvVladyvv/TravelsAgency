@@ -5,7 +5,7 @@ const travel_section = document.getElementById("travels_container")
 //Get request to obtain travels
 async function get_travels() {
     const response = await fetch(
-        "/travel_maintain/get_travels",
+        "/travel/get_travels",
         {
             method: "GET",
             headers: {
