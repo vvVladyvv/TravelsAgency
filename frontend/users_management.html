@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
     <link rel="stylesheet" href="assets/base.css">
+    <link rel="stylesheet" href="assets/maintain.css">
     <link rel="stylesheet" href="assets/auth.css">
 
 </head>
@@ -15,7 +16,7 @@
 
     </header>
 
-    <section class="user_search">
+    <section id="user_search">
         <div class="search_container">
             <form action="/user_maintain/get_user" method="post">
                 <label for="userId">userId:</label>
@@ -26,9 +27,13 @@
     </section>
 
     <section id="user_container">
-        <div class="admin_operation">
-            <button disabled id="delete_btn">Delete user</button>
-            <button disabled id="edit_btn">Edit user</button>
+        
+    </section>
+
+    <section id="operations">
+        <div class="operations_container">
+            <button id="delete_btn">Delete user</button>
+            <button id="edit_btn">Edit user</button>
         </div>
     </section>
 

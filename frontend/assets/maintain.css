@@ -1,0 +1,18 @@
+#user_edit{
+    display: none;
+}
+
+#operations{
+    display: none;
+}
+#operations.show{
+    display: block;
+}
+
+#user_search.hidden{
+    display: none;
+}
+
+#user_edit.show{
+    display: block;
+}

@@ -1,4 +1,7 @@
 const user_container = document.getElementById("user_container")
+const operations = document.getElementById("operations")
+const edit_container = document.getElementById("user_edit")
+const search_container = document.getElementById("user_search")
 const edit_btn = document.getElementById("edit_btn")
 const delete_btn = document.getElementById("delete_btn")
 const edit_submit = document.getElementById("edit_submit")
@@ -20,8 +23,8 @@ search_button.addEventListener("click", async (e) => {
     )
     const user_data = await response.json()
     if (response.ok){
-        delete_btn.disabled = false
-        edit_btn.disabled = false
+        operations.classList.toggle("show")
+        search_container.classList.toggle("hidden")
     }
     console.log(user_data)
 
@@ -96,6 +99,11 @@ search_button.addEventListener("click", async (e) => {
     delete_user(userId, token)
     edit_user(userId, token)
 
+})
+
+
+edit_btn.addEventListener("click", ()=>{
+    edit_container.classList.toggle("show")
 })
 
 
