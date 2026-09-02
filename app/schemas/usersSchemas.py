@@ -1,7 +1,9 @@
 from pydantic import BaseModel, field_validator, EmailStr
 
 
-#--------MAIN MODEL FOR USERS-------------
+#--------INPUT SCHEMAS-------------
+
+#Main schema for User
 class User(BaseModel):
     username: str 
     age: int
@@ -21,7 +23,6 @@ class User(BaseModel):
             raise ValueError("User must have 18 years old")
         return value    
 
-#----------REGISTER SCHEMAS------------
 #Register input schema, inherite User Base class
 class UserRegister(User):
     password: str
@@ -34,11 +35,6 @@ class UserRegister(User):
         return value    
 
 
-
-
-
-
-#---------LOGIN SCHEMAS------------------
 #Login input schema
 class UserLogin(BaseModel):
     email: EmailStr
@@ -51,14 +47,16 @@ class UserLogin(BaseModel):
             raise ValueError("Please specific a stronger password. (at least 6 digit)")
         return value
 
-#--------Edit SCHEMAS------------------------
+
 #Edit input schema
 class UserEdit(User):
     id: int
 
+    
+
 #------- OUTPUT SCHEMA----------------------
 
-
+#User output response
 class UserResponse(BaseModel):
    id: int
    username: str
@@ -67,6 +65,7 @@ class UserResponse(BaseModel):
    role: str
    image: str
 
+#Auth output response
 class LoginResponse(BaseModel):
     message: str
     access_token: str

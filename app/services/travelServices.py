@@ -5,7 +5,7 @@ from app.exceptions.travelsExceptions import TravelAlreadyExist, TravelNotFound
 
 travel_tools = TravelRepository()
 
-def create_travel(data,img,db):
+def create_travel(data,img_uid,db):
     travel = travel_tools.search_travel_by_destination(data.destination, db)
     if travel:
         raise TravelAlreadyExist()
@@ -16,7 +16,7 @@ def create_travel(data,img,db):
         price = data.price,
         available_seats = data.available_seats,
         duration = data.duration,
-        image = img
+        image = img_uid
     )
 
     return travel_tools.add_travel_db(travel, db)

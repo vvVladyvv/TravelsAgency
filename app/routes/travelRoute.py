@@ -63,9 +63,9 @@ async def new_travel(destination: str = Form(...), activity: str = Form(...) , p
                 detail="Format supported is (.jpg, .jpeg, .png)"
             )
         #Generate file name
-        unique_name = f"{uuid.uuid4()}{extension}"
+        image_uid = f"{uuid.uuid4()}{extension}"
         #Generate path of the file
-        file_path = upload_dir / unique_name
+        file_path = upload_dir / image_uid
 
         #Open file as buffer with "write" and "bytes" permissions, for modify it, then copy content in image inside our buffer object
         with file_path.open("wb") as buffer:
@@ -81,7 +81,7 @@ async def new_travel(destination: str = Form(...), activity: str = Form(...) , p
             duration=duration
         )
 
-        return create_travel(travel_data, image.filename, db)
+        return create_travel(travel_data, image_uid, db)
     raise AdminRequired()
 
 #Endpoint for reserve a travel
