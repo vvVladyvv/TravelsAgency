@@ -67,6 +67,9 @@ async def new_travel(destination: str = Form(...), activity: str = Form(...) , p
         #Generate path of the file
         file_path = upload_dir / image_uid
 
+        #Reset cursor inside image bytes
+        await image.seek(0)
+
         #Open file as buffer with "write" and "bytes" permissions, for modify it, then copy content in image inside our buffer object
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
