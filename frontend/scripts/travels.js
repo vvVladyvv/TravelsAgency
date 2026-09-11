@@ -69,6 +69,7 @@ get_travels()
 
 travel_category.forEach(category => {
     category.addEventListener("click", async () => {
+        travel_section.innerHTML = ""
         console.log("hello word")
         const response = await fetch(
             "/travel/get_travels",
@@ -78,7 +79,7 @@ travel_category.forEach(category => {
                     "Content-Type": "application/json"
                 }
             }
-            
+
         )
         const travels = await response.json()
         travels.forEach(travel => {
@@ -125,8 +126,9 @@ travel_category.forEach(category => {
                 image_container.addEventListener("mouseleave", () => {
                     card_information.classList.remove("show")
                 })
-                }
-            
+            }
+
         });
 
-})})
+    })
+})
