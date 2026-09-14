@@ -1,6 +1,7 @@
-from sqlalchemy import Integer, String, Column, Numeric, ForeignKey, Boolean
+from sqlalchemy import Integer, String, Column, Numeric, ForeignKey, Boolean, DateTime
 from app.database import Base
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 class Bookings(Base):
     __tablename__ = "bookings"
@@ -11,6 +12,7 @@ class Bookings(Base):
     food_include = Column(Boolean, default=False)
     status = Column(String, default="pending")
     cost = Column(Numeric(10, 2))
+    created = Column(DateTime, default=datetime.now())
 
     user = relationship("Users", back_populates="booking")
 
