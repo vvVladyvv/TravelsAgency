@@ -13,9 +13,9 @@ from app.database import get_db
 #Schemas
 from app.schemas.travelSchemas import CreateTravel, TravelEdit, Reserve
 #Services and repository
-from app.services.travelServices import create_travel, travel_edit
+from app.services.travelServices import create_travel, travel_edit, get_tendences
 from app.repositories.Travels_repositories import TravelRepository
-from app.services.booking_services import reserve_travel 
+from app.services.booking_services import reserve_travel
 
 #Auth flow and exceptions handle
 from app.security.authorization import get_current_user, get_admin
@@ -98,6 +98,10 @@ def Reserve_Travel(data:Reserve, user_id = Depends(get_current_user), db: Sessio
 def get_travels(db: Session = Depends(get_db)):
     travels = db.query(Travels).all()
     return travels
+
+@travels.get("/tendence_travels")
+def travels_tendences(db: Session = Depends(get_db)):
+    travels = get_tendences(db)
 
 #--------------Travels maintain routes (Admin only) ----------------
 

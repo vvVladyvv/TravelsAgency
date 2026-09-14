@@ -1,6 +1,9 @@
 from app.models.db_travels import Travels
+from app.models.db_booking import Bookings
+from datetime import datetime, timedelta
 from app.repositories.Travels_repositories import TravelRepository
 from app.exceptions.travelsExceptions import TravelAlreadyExist, TravelNotFound
+from sqlalchemy import select, func
 
 
 travel_tools = TravelRepository()
@@ -40,3 +43,20 @@ def travel_edit(data, img, db):
 
     raise TravelNotFound()
 
+def get_tendences(db):
+
+    TIME_24H = datetime.now() - timedelta(hours=24)
+
+    seats_sold = func.sum(Bookings.companions).label("seats_sold")
+
+    travels = db.execute(
+        select(
+            Bookings.travel_id,
+            seats_sold
+        )
+        .where(Bookings.created >= TIME_24H)
+        .group_by(Bookings.travel_id)
+        .order_by(seats_sold.desc())
+    ).all()
+
+    return travels
