@@ -59,3 +59,20 @@
     display: flex;
     justify-content: center;
 }
+
+
+
+#travels_tendence {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    height: auto;
+    gap: 10px;
+    margin-left: 10%;
+    margin-bottom: 20px;
+    
+    border: 10px solid orange;
+
+
+}
