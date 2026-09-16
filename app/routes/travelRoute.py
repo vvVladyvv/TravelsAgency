@@ -102,6 +102,7 @@ def get_travels(db: Session = Depends(get_db)):
 @travels.get("/tendence_travels")
 def travels_tendences(db: Session = Depends(get_db)):
     travels = get_tendences(db)
+    return travels
 
 #--------------Travels maintain routes (Admin only) ----------------
 

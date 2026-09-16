@@ -44,19 +44,30 @@ def travel_edit(data, img, db):
     raise TravelNotFound()
 
 def get_tendences(db):
-
-    TIME_24H = datetime.now() - timedelta(hours=24)
+    time_24h = datetime.now() - timedelta(hours=24)
 
     seats_sold = func.sum(Bookings.companions).label("seats_sold")
 
-    travels = db.execute(
-        select(
-            Bookings.travel_id,
-            seats_sold
-        )
-        .where(Bookings.created >= TIME_24H)
-        .group_by(Bookings.travel_id)
+    stmt = (
+        select(Travels, seats_sold)
+        .select_from(Bookings)
+        .join(Travels, Travels.id == Bookings.travel_id)
+        .where(Bookings.created >= time_24h)
+        .group_by(Travels.id)
         .order_by(seats_sold.desc())
-    ).all()
+        .limit(5)
+    )
 
-    return travels
+    results = db.execute(stmt).all()
+
+    return [
+        {
+            "id": travel.id,
+            "destination": travel.destination,
+            "image": travel.image,
+            "price": travel.price,
+            "available_seats": travel.available_seats,
+            "seats_sold": sold,
+        }
+        for travel, sold in results
+    ]

@@ -5,10 +5,10 @@ from app.exceptions.bookingExceptions import UnavailableSeats
 
 
 travel_tools = TravelRepository()
-booking_tools = BookingRepository
+booking_tools = BookingRepository()
 
 def reserve_travel(data, db, user_id):
-        travel_check = travel_tools.search_travel_by_destination(data.destination)
+        travel_check = travel_tools.search_travel_by_destination(data.destination, db)
         totals = data.companions + 1
         if travel_check.available_seats >= totals:
 
@@ -16,7 +16,7 @@ def reserve_travel(data, db, user_id):
                 travel_id = travel_check.id,
                 user_id = user_id,
                 companions = totals,
-                food_include = travel_check.include_food,
+                food_include = data.include_food,
                 cost = travel_check.price * totals
             )
         
