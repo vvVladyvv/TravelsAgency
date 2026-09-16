@@ -1,6 +1,7 @@
 //Get travels container section
 const travel_section = document.getElementById("travels_container")
 const travel_category = document.querySelectorAll(".category_btn")
+const travel_tendence = document.getElementById("travels_tendence")
 
 
 //Get request to obtain travels
@@ -65,7 +66,50 @@ async function get_travels() {
 
 }
 
-get_travels()
+async function get_tendences() {
+    const response = await fetch(
+        "/travel/tendence_travels",
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        },
+    )
+
+    const travels = await response.json()
+    travels.forEach(travel => {
+    //Card container for each travel object
+        const card = document.createElement("div")
+        card.className = "travel_card"
+
+        const travel_image = document.createElement("img")
+        travel_image.src = `uploads/${travel.image}`
+        card.append(travel_image)
+
+        const card_information = document.createElement("div")
+        card_information.className = "card_information"
+
+        const travel_destination = document.createElement("h2")
+        travel_destination.innerText = travel.destination
+
+        const travel_button = document.createElement("button")
+        travel_button.innerText = "See more"
+        travel_button.className = "card_button"
+
+        card_information.append(travel_destination)
+        card_information.append(travel_button)
+
+        card.append(card_information)
+        travel_tendence.append(card)
+    })
+};
+
+   
+        
+
+
+
 
 travel_category.forEach(category => {
     category.addEventListener("click", async () => {
@@ -132,3 +176,7 @@ travel_category.forEach(category => {
 
     })
 })
+
+
+get_travels()
+get_tendences()
