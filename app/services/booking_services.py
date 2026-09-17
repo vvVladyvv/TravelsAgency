@@ -19,6 +19,7 @@ def reserve_travel(data, db, user_id):
                 food_include = data.include_food,
                 cost = travel_check.price * totals
             )
-        
+            travel_check.available_seats -= totals
+            db.commit()
             return booking_tools.add_booking_db(booking, db)
         raise UnavailableSeats()
