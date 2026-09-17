@@ -1,7 +1,9 @@
 //Get travels container section
 const travel_section = document.getElementById("travels_container")
 const travel_category = document.querySelectorAll(".category_btn")
-const travel_tendence = document.getElementById("travels_tendence")
+const tendence_Card = document.getElementById("tendence_card")
+const left_btn = document.getElementById("left_btn")
+const right_btn = document.getElementById("right_btn")
 
 
 //Get request to obtain travels
@@ -77,16 +79,41 @@ async function get_tendences() {
         },
     )
 
+    let travel_index = 0
     const travels = await response.json()
-    travels.forEach(travel => {
-    //Card container for each travel object
-        const card = document.createElement("div")
-        card.className = "travel_card"
+    const travel = travels[travel_index]
+    
+    const travel_image = document.createElement("img")
+    travel_image.src = `uploads/${travel.image}`
+       
+    const card_information = document.createElement("div")
+    card_information.className = "card_information"
 
+    const travel_destination = document.createElement("h2")
+    travel_destination.innerText = travel.destination
+
+    const travel_button = document.createElement("button")
+    travel_button.innerText = "See more"
+    travel_button.className = "card_button"
+
+    card_information.append(travel_destination)
+    card_information.append(travel_button)
+
+    
+    tendence_Card.append(travel_image)
+    tendence_Card.append(card_information)
+
+        
+    right_btn.addEventListener("click", ()=>{
+        travel_index = (travel_index + 1) % travels.length;
+        const travel = travels[travel_index];
+
+        tendence_Card.innerHTML = "";
+        //Card container for each travel object
+   
         const travel_image = document.createElement("img")
         travel_image.src = `uploads/${travel.image}`
-        card.append(travel_image)
-
+        
         const card_information = document.createElement("div")
         card_information.className = "card_information"
 
@@ -100,9 +127,9 @@ async function get_tendences() {
         card_information.append(travel_destination)
         card_information.append(travel_button)
 
-        card.append(card_information)
-        travel_tendence.append(card)
-    })
+        tendence_Card.append(travel_image)
+        tendence_Card.append(card_information)
+        })
 };
 
    
