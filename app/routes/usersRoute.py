@@ -93,11 +93,10 @@ def get_users(Admin = Depends(get_admin), db: Session = Depends(get_db)):
 
 #Get a specific user from db
 @user_maintain.post("/get_user", response_model=UserResponse)
-def get_user(user_id: int, admin = Depends(get_admin), db: Session = Depends(get_db)):
-    if admin:
-        user = user_tools.found_user_by_id(user_id, db)
-        return user
-    raise AdminRequired()
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    user = user_tools.found_user_by_id(user_id, db)
+    return user
+   
 
 
 #Edit an exist user 
