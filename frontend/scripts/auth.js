@@ -1,17 +1,11 @@
+const user_container = document.getElementById("user-service");
 
-//getting form and button elements 
-const form = document.getElementById("form");
-const user = document.getElementById("button")
+async function get_current_user(){
 
-//When user click submit button
-user.addEventListener("click", () =>{
-    async function get_current_user(){
-        //extract token from localstorage
+     //extract token from localstorage
         const token = localStorage.getItem("token")
-
-        try{
-            //Get request to my current_user endpoint and pass token in the header
-            const response = await fetch(
+        //Get request to my current_user endpoint and pass token in the header
+        const response = await fetch(
             "/user/current_user",
             {
                 method: "GET",
@@ -20,21 +14,42 @@ user.addEventListener("click", () =>{
                     "Authorization": `Bearer ${token}`
                 }
             }
-            )
-            //getting data returned and convert it into json type
-            const data = await response.json()
-
-            if (!response.ok) {
-                alert("Get current user failed!", data.detail)
+        )
+        //getting data returned and convert it into json type
+        const data = await response.json()
+        const second_response = await fetch(
+            "/user_maintain/get_user?user_id=" + data.user_id,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
             }
+        )    
 
-        }catch (error){
-            console.error("Comunication lost", error)
+        const second_data = await second_response.json()
+        //if the user is logged in, display the profile and logout button
+        if (second_response.ok){
+            user_container.innerHTML = `
+                <a href="/profile">
+                    <img src="/uploads/${second_data.image}" alt="Profile Picture">
+                </a>
+                <div class="user-extra">
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout.html">Logout</a></li>
+                </div>
+            `
         }
+
+            
+}
+       
         
+        
+    
 
-    }
+get_current_user()
 
-})
+
 
 
