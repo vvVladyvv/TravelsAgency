@@ -1,6 +1,9 @@
-const user_container = document.getElementById("user-service");
-
 async function get_current_user(){
+    const user_container = document.getElementById("user-service");
+
+    if (!user_container) {
+        return;
+    }
 
      //extract token from localstorage
         const token = localStorage.getItem("token")
@@ -43,12 +46,15 @@ async function get_current_user(){
 
             
 }
-       
-        
-        
-    
 
-get_current_user()
+function initializeAuth() {
+    if (document.getElementById("user-service")) {
+        get_current_user();
+    }
+}
+
+document.addEventListener("componentsLoaded", initializeAuth, { once: true });
+initializeAuth();
 
 
 

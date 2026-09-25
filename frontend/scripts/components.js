@@ -21,6 +21,7 @@ async function getElements(header, footer) {
         //Insert this text in our empty elements
         header_container.innerHTML = header_html
         footer_container.innerHTML = footer_html
+        document.dispatchEvent(new Event("componentsLoaded"))
 
     } catch (error) {
         console.error("Error loading components:", error);
