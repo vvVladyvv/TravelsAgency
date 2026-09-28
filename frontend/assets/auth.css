@@ -28,7 +28,7 @@
 
 
 /*User Management info*/ 
-.user_card{
+.data_card{
     background-color: orange;
     display: flex;
     flex-direction: column;
@@ -52,6 +52,3 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-
-
-
