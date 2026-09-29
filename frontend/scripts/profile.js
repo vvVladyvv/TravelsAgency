@@ -1,4 +1,4 @@
-const user_container = document.getElementById("user_container")
+const data_container = document.getElementById("data_container")
 const operations = document.getElementById("operations")
 
 async function load_profile(){
@@ -29,7 +29,7 @@ async function load_profile(){
     const user_data = await second_response.json()
 
     const user_card = document.createElement("div")
-    user_card.className = "user_card"
+    user_card.className = "data_card"
 
     //Create image for user
     const image_container = document.createElement("div")
@@ -96,7 +96,7 @@ async function load_profile(){
     //Add all into the user_container
     user_card.append(image_container)
     user_card.append(info_container)
-    user_container.append(user_card)
+    data_container.append(user_card)
     
 
     

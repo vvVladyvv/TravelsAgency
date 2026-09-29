@@ -38,7 +38,7 @@ async function get_current_user(){
                     <img src="/uploads/${second_data.image}" alt="Profile Picture">
                 </a>
                 <div class="user-extra">
-                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/profile.html">Profile</a></li>
                     <li><a href="/logout.html">Logout</a></li>
                 </div>
             `
