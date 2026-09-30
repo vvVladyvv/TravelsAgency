@@ -104,8 +104,8 @@ search_button.addEventListener("click", async (e) => {
     data_card.append(info_container)
     data_container.append(data_card)
 
-    delete_user(userId, token)
-    edit_user(userId, token)
+    delete_travel(travelId, token)
+    edit_travel(travelId, token)
 
 })
 
@@ -115,12 +115,12 @@ edit_btn.addEventListener("click", ()=>{
 })
 
 
-async function delete_user(userId, token) {
+async function delete_travel(travelId, token) {
     delete_btn.addEventListener("click", async (e) => {
         e.preventDefault()
 
         const response = await fetch(
-            `/user_maintain/delete_user?id=${userId}`,
+            `/travel_maintain/delete_travel?id=${travelId}`,
             {
                 method: "DELETE",
                 headers: {
@@ -131,27 +131,29 @@ async function delete_user(userId, token) {
     })
 }
 
-async function edit_user(userId, token) {
+async function edit_travel(travelId, token) {
     edit_submit.addEventListener("click", async (e) => {
         const new_data = new FormData() 
 
-        const new_username = document.getElementById("n_username").value
-        const new_age = document.getElementById("n_age").value
-        const new_email = document.getElementById("n_email").value
-        const new_password = document.getElementById("n_password").value
+        const new_destination = document.getElementById("n_destination").value
+        const new_activity = document.getElementById("n_activity").value
+        const new_price = document.getElementById("n_price").value
+        const new_available_seats = document.getElementById("n_available_seats").value
+        const new_duration = document.getElementById("n_duration").value
         const new_image = document.getElementById("n_image").files[0]
 
-        new_data.append("userId", userId)
-        new_data.append("new_username", new_username)
-        new_data.append("new_age", new_age)
-        new_data.append("new_email", new_email)
-        new_data.append("new_password", new_password)
-        new_data.append("new_image", new_image)
+        new_data.append("travelId", travelId)
+        new_data.append("destination", new_destination)
+        new_data.append("activity", new_activity)
+        new_data.append("price", new_price)
+        new_data.append("available_seats", new_available_seats)
+        new_data.append("duration", new_duration)
+        new_data.append("image", new_image)
 
 
 
         const response = await fetch(
-            "/user_maintain/edit_user",
+            "/travel_maintain/edit_travel",
             {
                 method: "PUT",
                 headers: {
