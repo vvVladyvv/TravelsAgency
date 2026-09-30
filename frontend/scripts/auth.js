@@ -34,7 +34,7 @@ async function get_current_user(){
         //if the user is logged in, display the profile and logout button
         if (second_response.ok){
             user_container.innerHTML = `
-                <a href="/profile">
+                <a href="/profile.html">
                     <img src="/uploads/${second_data.image}" alt="Profile Picture">
                 </a>
                 <div class="user-extra">
