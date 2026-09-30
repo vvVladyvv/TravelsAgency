@@ -10,9 +10,6 @@ class CreateTravel(BaseModel):
     available_seats: int
     duration: int
 
-#Schema for edit a Travel
-class TravelEdit(CreateTravel):
-    id: int
 
 #Schema for reserve a travel
 class Reserve(BaseModel):

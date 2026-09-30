@@ -26,8 +26,8 @@ def create_travel(data,img_uid,db):
 
 
 
-def travel_edit(data, img, db):
-    travel = travel_tools.search_travel_by_id(data.id, data)
+def travel_edit(travelId, data, img, db):
+    travel = travel_tools.search_travel_by_id(travelId, db)
     if travel:
         travel.destination = data.destination
         travel.activity = data.activity
