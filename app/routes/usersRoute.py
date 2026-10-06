@@ -53,26 +53,45 @@ def get_actual_user(user = Depends(get_current_user)):
 
 #Endpoint for register new user
 @user.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def register_user(username: str = Form(...), age: int = Form(...), email: str = Form(...), password: str = Form(...), image: UploadFile = File(...), db: Session = Depends(get_db)):
-
-    extension = Path(image.filename).suffix
-    image_uuid = f"{uuid.uuid4()}{extension}"
-
-    image_path = upload_path / image_uuid
-
-    with image_path.open("wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
-
+async def register_user(username: str = Form(...), age: int = Form(...), email: str = Form(...), password: str = Form(...), image: UploadFile | None = File(default=None), db: Session = Depends(get_db)):
 
     new_user = UserRegister(
-        username=username,
-        age=age,
-        email=email,
-        password=password
+            username=username,
+            age=age,
+            email=email,
+            password=password
     )
 
-    user = add_new_user(new_user, image_uuid, db)
-    return user
+    if image != None: 
+        max_size = 5 + (1024 * 1024)
+        size = await image.read()
+        if len(size) > max_size:
+            raise HTTPException(
+                status_code=413,
+                detail="File too large"
+            )
+        #Extract suffix of file and restrict 3 types of suffix
+        extension = Path(image.filename).suffix
+        if extension not in [".jpg", ".png", ".jpeg"]:
+            raise HTTPException(
+                status_code=400,
+                detail="Format supported is (.jpg, .jpeg, .png)"
+            )
+        #Generate file name
+        image_uid = f"{uuid.uuid4()}{extension}"
+        #Generate path of the file
+        file_path = upload_path / image_uid
+
+        #Reset cursor inside image bytes
+        await image.seek(0)
+
+        #Open file as buffer with "write" and "bytes" permissions, for modify it, then copy content in image inside our buffer object
+        with file_path.open("wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+
+        return add_new_user(new_user, image_uid, db)
+    else:
+        return add_new_user(new_user, "profile.png", db)
 
 #Endpoint for authenthicate user
 @user.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
@@ -102,8 +121,6 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 #Edit an exist user 
 @user_maintain.put("/edit_user", response_model=UserResponse)
 def edit_user(userId: int = Form(...), new_username: str = Form(...), new_age: int = Form(...), new_email: str = Form(...), new_password: str = Form(...), new_image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
-
-
     if Admin:
         user = user_tools.found_user_by_id(userId, db)
         if user:
@@ -116,6 +133,8 @@ def edit_user(userId: int = Form(...), new_username: str = Form(...), new_age: i
             
             older_img_name = user.image
             older_img_path = upload_path / older_img_name
+
+        
 
             extension = Path(new_image.filename).suffix
             uuid_image = f"{uuid.uuid4()}{extension}"
