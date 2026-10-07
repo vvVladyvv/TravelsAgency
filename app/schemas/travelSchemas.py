@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 #----------Input Travels schemas---------------
 
@@ -9,7 +9,8 @@ class CreateTravel(BaseModel):
     price: int
     available_seats: int
     duration: int
-
+    
+    model_config = ConfigDict(from_attributes=True)
 
 #Schema for reserve a travel
 class Reserve(BaseModel):
