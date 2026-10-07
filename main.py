@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.models import db_booking, db_user, db_travels
 from app.routes import travelRoute
 from app.routes import usersRoute
+from app.routes import bookingRoute
 from app.database import Base, engine
 
 
@@ -18,6 +19,10 @@ app.include_router(usersRoute.user_maintain)
 
 app.include_router(travelRoute.travels)
 app.include_router(travelRoute.travels_maintain)
+
+
+app.include_router(bookingRoute.booking)
+
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
