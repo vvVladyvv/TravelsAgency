@@ -1,11 +1,11 @@
-const user_container = document.getElementById("user_container")
+const data_container = document.getElementById("data_container")
 const operations = document.getElementById("operations")
-const edit_container = document.getElementById("user_edit")
-const search_container = document.getElementById("user_search")
+const data_edit = document.getElementById("data_edit")
+const search_container = document.getElementById("search")
 const edit_btn = document.getElementById("edit_btn")
 const delete_btn = document.getElementById("delete_btn")
 const edit_submit = document.getElementById("edit_submit")
-const search_button = document.getElementById("button")
+const search_button = document.getElementById("search_button")
 
 
 
@@ -21,24 +21,24 @@ search_button.addEventListener("click", async (e) => {
             }
         }
     )
-    const user_data = await response.json()
+    const data = await response.json()
     if (response.ok){
         operations.classList.toggle("show")
         search_container.classList.toggle("hidden")
     }
-    console.log(user_data)
+    console.log(data)
 
     //Container for user information
-    const user_card = document.createElement("div")
-    user_card.className = "user_card"
+    const data_card = document.createElement("div")
+    data_card.className = "data_card"
 
     //Create image for user
     const image_container = document.createElement("div")
     image_container.className = "image_container"
 
-    const user_image = document.createElement("img")
-    user_image.src = `uploads/${user_data.image}`
-    image_container.append(user_image)
+    const image = document.createElement("img")
+    image.src = `uploads/${data.image}`
+    image_container.append(image)
 
     //Create info container
     const info_container = document.createElement("div")
@@ -48,52 +48,52 @@ search_button.addEventListener("click", async (e) => {
     //--------------  ID  -------------- //
     const id = document.createElement("h2")
     id.innerText = "ID"
-    const user_id = document.createElement("p")
-    user_id.innerText = user_data.id
+    const data_id = document.createElement("p")
+    data_id.innerText = data.id
 
     info_container.append(id)
-    info_container.append(user_id)
+    info_container.append(data_id)
 
     //--------------  Username  -------------- //
     const username = document.createElement("h2")
     username.innerText = "Username"
-    const user_username = document.createElement("p")
-    user_username.innerText = user_data.username
+    const data_username = document.createElement("p")
+    data_username.innerText = data.username
 
     info_container.append(username)
-    info_container.append(user_username)
+    info_container.append(data_username)
 
     //--------------  Age  -------------- //
     const age = document.createElement("h2")
     age.innerText = "Age"
-    const user_age = document.createElement("p")
-    user_age.innerText = user_data.age
+    const data_age = document.createElement("p")
+    data_age.innerText = data.age
 
     info_container.append(age)
-    info_container.append(user_age)
+    info_container.append(data_age)
 
     //--------------  Email  -------------- //
     const email = document.createElement("h2")
     email.innerText = "Email"
-    const user_email = document.createElement("p")
-    user_email.innerText = user_data.email
+    const data_email = document.createElement("p")
+    data_email.innerText = data.email
 
     info_container.append(email)
-    info_container.append(user_email)
+    info_container.append(data_email)
 
     //------------- ROLE ------------------- //
     const role = document.createElement("h2")
     role.innerText = "Role"
-    const user_role = document.createElement("p")
-    user_role.innerText = user_data.role
+    const data_role = document.createElement("p")
+    data_role.innerText = data.role
 
     info_container.append(role)
-    info_container.append(user_role)
+    info_container.append(data_role)
 
     //Add all into the user_container
-    user_card.append(image_container)
-    user_card.append(info_container)
-    user_container.append(user_card)
+    data_card.append(image_container)
+    data_card.append(info_container)
+    data_container.append(data_card)
 
 
     delete_user(userId, token)
@@ -103,7 +103,7 @@ search_button.addEventListener("click", async (e) => {
 
 
 edit_btn.addEventListener("click", ()=>{
-    edit_container.classList.toggle("show")
+    data_edit.classList.toggle("show")
 })
 
 

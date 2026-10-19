@@ -16,17 +16,17 @@
 
     </header>
 
-    <section id="user_search">
+    <section id="search">
         <div class="search_container">
             <form action="/user_maintain/get_user" method="post">
                 <label for="userId">userId:</label>
                 <input type="text" name="userId" id="userId" placeholder="Into user ID" required>
-                <button id="button">Search</button>
+                <button id="search_button">Search</button>
             </form>
         </div>
     </section>
 
-    <section id="user_container">
+    <section id="data_container">
         
     </section>
 
@@ -37,7 +37,7 @@
         </div>
     </section>
 
-    <section id="user_edit">
+    <section id="data_edit">
         <form action="/user_maintain/edit_user" method="post"></form>
         <label for="n_username">New Username: </label>
         <input type="text" name="n_username" id="n_username">

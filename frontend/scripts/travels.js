@@ -79,38 +79,13 @@ async function get_tendences() {
         },
     )
 
-    let travel_index = 0
-    const travels = await response.json()
-    const travel = travels[travel_index]
-    
-    const travel_image = document.createElement("img")
-    travel_image.src = `uploads/${travel.image}`
-       
-    const card_information = document.createElement("div")
-    card_information.className = "card_information"
-
-    const travel_destination = document.createElement("h2")
-    travel_destination.innerText = travel.destination
-
-    const travel_button = document.createElement("button")
-    travel_button.innerText = "See more"
-    travel_button.className = "card_button"
-
-    card_information.append(travel_destination)
-    card_information.append(travel_button)
-
-    
-    tendence_Card.append(travel_image)
-    tendence_Card.append(card_information)
-
+    if (response) {
+        console.log(response)
+        let travel_index = 0
+        const travels = await response.json()
+        const travel = travels[travel_index]
         
-    right_btn.addEventListener("click", ()=>{
-        travel_index = (travel_index + 1) % travels.length;
-        const travel = travels[travel_index];
-
-        tendence_Card.innerHTML = "";
-        //Card container for each travel object
-   
+        console.log(travel)
         const travel_image = document.createElement("img")
         travel_image.src = `uploads/${travel.image}`
         
@@ -127,9 +102,37 @@ async function get_tendences() {
         card_information.append(travel_destination)
         card_information.append(travel_button)
 
+        
         tendence_Card.append(travel_image)
         tendence_Card.append(card_information)
+
+        
+        right_btn.addEventListener("click", ()=>{
+            travel_index = (travel_index + 1) % travels.length;
+            const travel = travels[travel_index];
+
+            tendence_Card.innerHTML = "";
+            //Card container for each travel object
+            const travel_image = document.createElement("img")
+            travel_image.src = `uploads/${travel.image}`
+            
+            const card_information = document.createElement("div")
+            card_information.className = "card_information"
+
+            const travel_destination = document.createElement("h2")
+            travel_destination.innerText = travel.destination
+
+            const travel_button = document.createElement("button")
+            travel_button.innerText = "See more"
+            travel_button.className = "card_button"
+
+            card_information.append(travel_destination)
+            card_information.append(travel_button)
+
+            tendence_Card.append(travel_image)
+            tendence_Card.append(card_information)
         })
+    }
 };
 
    

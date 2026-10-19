@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 #Dependency injection
 from app.database import get_db
 #Schemas
-from app.schemas.travelSchemas import CreateTravel, TravelEdit, Reserve
+from app.schemas.travelSchemas import CreateTravel, Reserve
 #Services and repository
 from app.services.travelServices import create_travel, travel_edit, get_tendences
 from app.repositories.Travels_repositories import TravelRepository
@@ -116,10 +116,40 @@ def get_travel(travel_id: int, admin = Depends(AdminRequired), db: Session = Dep
 
 #Edit a travel
 @travels_maintain.put("/edit_travel")
-def edit_travel(data: TravelEdit, Admin = Depends(get_admin), db: Session = Depends(get_db)):
+async def edit_travel(travelId: int = Form(...), destination: str = Form(...), activity: str = Form(...), price: float = Form(...), available_seats: int = Form(...), duration: int = Form(...), image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
     if Admin:
-        travel = travel_edit(data, db)
-        return travel
+       size = await image.read()
+       max_size = 5 + (1024 * 1024)
+       if len(size) > max_size:
+           raise HTTPException(
+               status_code=413,
+               detail="file too large"
+           )
+       extension = Path(image.filename).suffix
+       if extension not in [".jpg", ".png", ".jpeg"]:
+           raise HTTPException(
+               status_code=400,
+               detail="Format supported is (.jpg, .jpeg, .png)"
+            )
+
+       image_file = f'{uuid.uuid4()}{extension}'
+       file_path = upload_dir / image_file
+
+       await image.seek(0)
+
+       with file_path.open("wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+        travel_Data = CreateTravel(
+            destination=destination,
+            activity=activity,
+            price=price,
+            available_seats=available_seats,
+            duration=duration
+        )
+
+        return travel_edit(travelId, travel_Data, image_file, db)
+       
     raise AdminRequired()
 
 

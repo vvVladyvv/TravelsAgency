@@ -1,4 +1,4 @@
-#user_edit{
+#data_edit{
     display: none;
 }
 
@@ -9,10 +9,10 @@
     display: block;
 }
 
-#user_search.hidden{
+#search.hidden{
     display: none;
 }
 
-#user_edit.show{
+#data_edit.show{
     display: block;
 }
