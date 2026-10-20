@@ -2,24 +2,28 @@ from app.models.db_booking import Bookings
 from app.repositories.Travels_repositories import TravelRepository
 from app.repositories.Booking_repositories import BookingRepository
 from app.exceptions.bookingExceptions import UnavailableSeats
+from app.exceptions.travelsExceptions import TravelNotFound
 
 
 travel_tools = TravelRepository()
 booking_tools = BookingRepository()
 
 def reserve_travel(data, db, user_id):
-        travel_check = travel_tools.search_travel_by_destination(data.destination, db)
-        totals = data.companions + 1
-        if travel_check.available_seats >= totals:
+    travel_check = travel_tools.search_travel_by_destination(data.destination, db)
+    if travel_check is None:
+        raise TravelNotFound()
 
-            booking = Bookings(
-                travel_id = travel_check.id,
-                user_id = user_id,
-                companions = totals,
-                food_include = data.include_food,
-                cost = travel_check.price * totals
-            )
-            travel_check.available_seats -= totals
-            db.commit()
-            return booking_tools.add_booking_db(booking, db)
-        raise UnavailableSeats()
+    totals = data.companions + 1
+    if travel_check.available_seats >= totals:
+
+        booking = Bookings(
+            travel_id=travel_check.id,
+            user_id=user_id,
+            companions=totals,
+            food_include=data.include_food,
+            cost=travel_check.price * totals,
+        )
+        travel_check.available_seats -= totals
+        db.commit()
+        return booking_tools.add_booking_db(booking, db)
+    raise UnavailableSeats()
