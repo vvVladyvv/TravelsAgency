@@ -13,7 +13,7 @@ from app.security.hashing import(
 
 user_tools = UserRepository()
 
-def add_new_user(data, image_uuid,db):
+def add_new_user(data, image_uuid, db):
     user = user_tools.found_user_by_email(data.email, db)
     if user:
         raise UserAlreadyExist()
