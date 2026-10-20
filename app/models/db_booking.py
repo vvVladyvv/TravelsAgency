@@ -15,7 +15,5 @@ class Bookings(Base):
     created = Column(DateTime, default=datetime.now())
 
     user = relationship("Users", back_populates="booking")
+    travel = relationship("Travels", back_populates="booking")
 
-
-    
-    

@@ -1,5 +1,6 @@
 from sqlalchemy import Integer, String, Column, CheckConstraint
 from app.database import Base
+from sqlalchemy.orm import relationship
 
 class Travels(Base):
     __tablename__ = "travels"
@@ -11,3 +12,4 @@ class Travels(Base):
     duration = Column(Integer, CheckConstraint('duration > 0'))
     image = Column(String, nullable=True)
 
+    booking = relationship("Bookings", back_populates="travel")
