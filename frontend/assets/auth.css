@@ -52,3 +52,20 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+
+#bookings_list{
+    display:flex;
+    background-color: orange;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.booking_card{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 20px;
+}
