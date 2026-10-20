@@ -88,7 +88,7 @@ async def new_travel(destination: str = Form(...), activity: str = Form(...) , p
     raise AdminRequired()
 
 #Endpoint for reserve a travel
-@travels.post("/reserve_travel")
+@travels.post("/reserve_travel", status_code=201)
 def Reserve_Travel(data:Reserve, user_id = Depends(get_current_user), db: Session = Depends(get_db)):
         booking = reserve_travel(data, db, user_id["user_id"])
         return booking
