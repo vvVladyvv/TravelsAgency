@@ -103,3 +103,33 @@
    border-radius: 50%;
    object-fit: cover;
 }
+
+#footer{
+    background-color: rgb(0, 0, 0);
+    padding: 1%;
+    color: white;
+}
+
+.footer-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 100px;
+}
+
+.footer-links p{
+    color: white;
+    font-weight: bold;
+}
+
+.footer-links a{
+    text-decoration: none;
+    color: white;
+    padding: 20px;
+}
+
+.footer-links a:hover{
+    border-radius: 20%;
+    background-color: grey;
+    transition: 0.5s;
+}
