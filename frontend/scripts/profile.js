@@ -115,18 +115,31 @@ async function load_profile(){
         const booking_card = document.createElement("div")
         booking_card.className = "booking_card"
 
+        const booking_image_container = document.createElement("div")
+        booking_image_container.className = "booking_image_container"
+        const booking_image = document.createElement("img")
+        booking_image.src = `/uploads/${booking.travel.image}`
+
+        booking_image_container.append(booking_image)
+        
+
         const booking_info = document.createElement("div")
         booking_info.className = "booking_info"
+
+        
 
         const booking_id = document.createElement("h2")
         booking_id.innerText = "Booking ID"
         const booking_id_value = document.createElement("p")
         booking_id_value.innerText = booking.id
 
+
+
         const travel_destination = document.createElement("h2")
         travel_destination.innerText = "Destination"
         const travel_destination_value = document.createElement("p")
         travel_destination_value.innerText = booking.travel.destination
+
 
         const booking_cost = document.createElement("h2")
         booking_cost.innerText = "Total Cost"
@@ -154,6 +167,7 @@ async function load_profile(){
         booking_info.append(booking_date)
         booking_info.append(booking_date_value)
 
+        booking_card.append(booking_image_container)
         booking_card.append(booking_info)
         bookings_list.append(booking_card)
     }
