@@ -9,6 +9,7 @@ class CreateTravel(BaseModel):
     price: int
     available_seats: int
     duration: int
+    image: str
     
     model_config = ConfigDict(from_attributes=True)
 

@@ -81,7 +81,8 @@ async def new_travel(destination: str = Form(...), activity: str = Form(...) , p
             activity=activity,
             price=price,
             available_seats=available_seats,
-            duration=duration
+            duration=duration,
+            image=image_uid
         )
 
         return create_travel(travel_data, image_uid, db)
