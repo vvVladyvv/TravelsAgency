@@ -1,6 +1,11 @@
 const form = document.getElementById('form');
 
 if (form) {
+  const destination = new URLSearchParams(window.location.search).get('destination');
+  if (destination) {
+    document.getElementById('destination').value = destination;
+  }
+
   form.addEventListener('submit', async (event) => {
     const token = localStorage.getItem('token');
     event.preventDefault();

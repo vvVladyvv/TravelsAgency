@@ -1,3 +1,11 @@
+body {
+    margin: 0;
+    background: #f7f6f2;
+    color: #172b2a;
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+
 #header{
     background-color: rgb(0, 0, 0);
     padding: 1%;
