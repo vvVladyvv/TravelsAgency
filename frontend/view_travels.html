@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse and filter trips by destination, category, and duration.">
+    <title>VlogTravels</title>
+    <link rel="stylesheet" href="/assets/base.css">
+    <link rel="stylesheet" href="/assets/view_travels.css">
+</head>
+<body>
+    <header id="header"></header>
+    <main class="explore-page">
+        <section class="explore-intro" aria-labelledby="page-title">
+            <p class="eyebrow">Find your travel in our cataloge</p>
+            <h1 id="page-title">A trip worth<br><span>getting lost for.</span></h1>
+            <p class="intro-copy">Browse the places, pick your pace, and start planning what comes next.</p>
+        </section>
+
+        <section class="travel-filters" aria-label="Filter travels">
+            <label class="filter-field destination-filter">
+                <span>Destination</span>
+                <input id="destination-filter" type="search" placeholder="Search a place" autocomplete="off">
+            </label>
+            <label class="filter-field category-filter">
+                <span>Category</span>
+                <select id="category-filter">
+                    <option value="">All categories</option>
+                </select>
+            </label>
+            <label class="filter-field duration-filter">
+                <span>Duration</span>
+                <select id="duration-filter">
+                    <option value="">Any Length</option>
+                </select>
+            </label>
+            <button id="clear-filters" class="clear-filters" type="button">Clear filters</button>
+        </section>
+
+        <section class="results-heading" aria-live="polite">
+            <h2>Trips to explore</h2>
+            <p id="results-count">Loading trips...</p>
+        </section>
+        <section id="travel-gallery" class="travel-gallery" aria-label="Available travels"></section>
+        <p id="empty-state" class="empty-state" hidden>No trips match those filters. Try another destination or clear your filters.</p>
+    </main>
+    <footer id="footer"></footer>
+    <script src="/scripts/components.js"></script>
+    <script src="/scripts/view_travels.js"></script>
+    <script src="/scripts/auth.js"></script>
+</body>
+</html>
