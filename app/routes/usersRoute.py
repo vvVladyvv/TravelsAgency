@@ -11,7 +11,7 @@ import uuid
 #Models
 from app.models.db_user import Users
 #Schemas
-from app.schemas.usersSchemas import UserRegister, UserLogin, UserResponse, LoginResponse, UserEdit
+from app.schemas.usersSchemas import UserRegister, UserLogin, UserResponse, LoginResponse, UserEdit, RegisterResponse
 #Dependency injection 
 from app.database import get_db
 #Services (users, hashing, authorization_flow )
@@ -52,7 +52,7 @@ def get_actual_user(user = Depends(get_current_user)):
     return user
 
 #Endpoint for register new user
-@user.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@user.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
 async def register_user(username: str = Form(...), age: int = Form(...), email: str = Form(...), password: str = Form(...), image: UploadFile | None = File(default=None), db: Session = Depends(get_db)):
 
     new_user = UserRegister(
@@ -63,7 +63,7 @@ async def register_user(username: str = Form(...), age: int = Form(...), email: 
     )
 
     if image != None: 
-        max_size = 5 + (1024 * 1024)
+        max_size = 5 * 1024 * 1024
         size = await image.read()
         if len(size) > max_size:
             raise HTTPException(
@@ -89,9 +89,20 @@ async def register_user(username: str = Form(...), age: int = Form(...), email: 
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
-        return add_new_user(new_user, image_uid, db)
+        new_user = add_new_user(new_user, image_uid, db)
+        if new_user:
+            return {
+                "message": "User created successfully",
+                "data": new_user
+            }
+
     else:
-        return add_new_user(new_user, "profile.png", db)
+        new_user = add_new_user(new_user, "profile.png", db)
+        if new_user:
+            return {
+                "message": "User created successfully",
+                "data": new_user
+            }
 
 #Endpoint for authenthicate user
 @user.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
