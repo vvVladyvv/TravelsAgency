@@ -28,13 +28,28 @@ if (form) {
             });
             //We store data and then convert it to JSON
             const data = await response.json();
-            console.log("Respuesta del servidor:", data);
+            if (response.ok){
+                alert("Server Response: " + data.message);
+            }
+            
 
             if (!response.ok) {
-                console.error("Registro fallido:", data);
+                if (Array.isArray(data.detail)) {
+                    let message = "";
+
+                    for (const issue of data.detail) {
+                        message += issue.loc[issue.loc.length - 1]
+                            + ": " + issue.msg + "\n";
+                    }
+
+                    alert(message);
+                } else {
+                    alert("Register failed: " + data.detail);
+                }
             }
+            
         } catch (error) {
-            console.error("Server cant connect", error);
+            alert("Server Connection Failed: " + error.message);
         }
     });
 }
