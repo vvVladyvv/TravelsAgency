@@ -1,6 +1,7 @@
 #FastAPi modules
 from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile, File
 from fastapi.responses import FileResponse
+from pydantic import EmailStr, ValidationError
 #SQL ALCHEMY modules
 from sqlalchemy.orm import Session
 #File System librarys
@@ -53,13 +54,25 @@ def get_actual_user(user = Depends(get_current_user)):
 
 #Endpoint for register new user
 @user.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
-async def register_user(username: str = Form(...), age: int = Form(...), email: str = Form(...), password: str = Form(...), image: UploadFile | None = File(default=None), db: Session = Depends(get_db)):
+async def register_user(username: str = Form(""), age: int = Form(...), email: EmailStr = Form(...), password: str = Form(...), image: UploadFile | None = File(default=None), db: Session = Depends(get_db)):
 
-    new_user = UserRegister(
+    try:
+        new_user = UserRegister(
             username=username,
             age=age,
             email=email,
             password=password
+        )
+    except ValidationError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=[
+                {
+                    "loc": list(error["loc"]),
+                    "msg": error["msg"]
+                }
+                for error in exc.errors()
+            ]
     )
 
     if image != None: 
@@ -71,7 +84,7 @@ async def register_user(username: str = Form(...), age: int = Form(...), email: 
                 detail="File too large"
             )
         #Extract suffix of file and restrict 3 types of suffix
-        extension = Path(image.filename).suffix
+        extension = Path(image.filename).suffix.lower()
         if extension not in [".jpg", ".png", ".jpeg"]:
             raise HTTPException(
                 status_code=400,
@@ -131,7 +144,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 
 #Edit an exist user 
 @user_maintain.put("/edit_user", response_model=UserResponse)
-def edit_user(userId: int = Form(...), new_username: str = Form(...), new_age: int = Form(...), new_email: str = Form(...), new_password: str = Form(...), new_image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
+def edit_user(userId: int = Form(...), new_username: str = Form(...), new_age: int = Form(...), new_email: EmailStr = Form(...), new_password: str = Form(...), new_image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
     if Admin:
         user = user_tools.found_user_by_id(userId, db)
         if user:
