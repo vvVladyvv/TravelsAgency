@@ -56,6 +56,18 @@ class UserEdit(User):
 
 #------- OUTPUT SCHEMA----------------------
 
+class RegisterResponse(BaseModel):
+    message: str
+    data: UserResponse
+
+
+#Auth output response
+class LoginResponse(BaseModel):
+    message: str
+    access_token: str
+    token_type: str
+
+
 #User output response
 class UserResponse(BaseModel):
    id: int
@@ -64,9 +76,3 @@ class UserResponse(BaseModel):
    age: int
    role: str
    image: str
-
-#Auth output response
-class LoginResponse(BaseModel):
-    message: str
-    access_token: str
-    token_type: str
