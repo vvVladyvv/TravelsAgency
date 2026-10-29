@@ -30,15 +30,25 @@ if (form){
             
 
             if (!response.ok){
-                alert(data.detail || "Failed try sign in")
+                if (Array.isArray(data.detail)) {
+                    let message = "";
+
+                    for (const issue of data.detail) {
+                        message += issue.loc[issue.loc.length - 1]
+                            + ": " + issue.msg + "\n";
+                    }
+                    alert(message);
+                } else {
+                    alert("Login failed: " + data.detail);
+                }
+              
             }
 
-            //Save token in localstorage, and return user to home
-            localStorage.setItem("token", data.access_token)
-            window.location.href = "/";
-            
-
-           
+            if (response.ok){
+                localStorage.setItem("token", data.access_token);
+                return window.location.href = "/";
+                
+            }
 
         } catch (error) {
             console.error("Http Response reject conection.", error)
