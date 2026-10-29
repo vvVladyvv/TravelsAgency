@@ -121,12 +121,10 @@ async function load_profile(){
         booking_image.src = `/uploads/${booking.travel.image}`
 
         booking_image_container.append(booking_image)
-        
 
         const booking_info = document.createElement("div")
         booking_info.className = "booking_info"
 
-        
 
         const booking_id = document.createElement("h2")
         booking_id.innerText = "Booking ID"
