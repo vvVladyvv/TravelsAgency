@@ -10,7 +10,7 @@ engine = create_engine(
 
 sessionlocal = sessionmaker(
     bind=engine,
-    autoflush=False,
+    autoflush=False
 )
 
 def get_db():

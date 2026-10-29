@@ -1,5 +1,4 @@
 from app.models.db_user import Users
-from fastapi import HTTPException
 from app.repositories.Users_repositories import (
     UserRepository, 
 )

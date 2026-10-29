@@ -14,7 +14,7 @@ class User(BaseModel):
     def username_validator(cls, value):
         if not value.strip():
             raise ValueError("Username field cant be empty")
-        return value
+        return value.strip()
         
     @field_validator("age")
     @classmethod
@@ -56,18 +56,6 @@ class UserEdit(User):
 
 #------- OUTPUT SCHEMA----------------------
 
-class RegisterResponse(BaseModel):
-    message: str
-    data: UserResponse
-
-
-#Auth output response
-class LoginResponse(BaseModel):
-    message: str
-    access_token: str
-    token_type: str
-
-
 #User output response
 class UserResponse(BaseModel):
    id: int
@@ -76,3 +64,13 @@ class UserResponse(BaseModel):
    age: int
    role: str
    image: str
+
+class RegisterResponse(BaseModel):
+    message: str
+    data: UserResponse
+
+#Auth output response
+class LoginResponse(BaseModel):
+    message: str
+    access_token: str
+    token_type: str
