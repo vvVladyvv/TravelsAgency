@@ -13,5 +13,5 @@ def get_admin(credentials = Depends(oauth2_scheme)):
       token = verify_token(credentials.credentials)
       if token["role"] == "admin":
            return token
-      return None
+      raise AdminRequired()
       
