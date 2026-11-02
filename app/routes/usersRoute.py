@@ -12,11 +12,13 @@ import uuid
 #Models
 from app.models.db_user import Users
 #Schemas
-from app.schemas.usersSchemas import UserRegister, UserLogin, UserResponse, LoginResponse, UserEdit, RegisterResponse
+from app.schemas.usersSchemas import UserRegister, UserLogin, UserResponse, LoginResponse, UserEdit, RegisterResponse, EditResponse, DeleteResponse
 #Dependency injection 
 from app.database import get_db
-#Services (users, hashing, authorization_flow )
-from app.services.usersServices import add_new_user, verified_user, admin_role
+#Services (users, hashing, authorization_flow, image flow )
+from app.services.usersServices import add_new_user, verified_user, admin_role, user_edit
+from app.services.image_services import save_image
+#Authorization flow
 from app.security.authorization import get_current_user, get_admin
 from app.security.hashing import hashed_password
 
@@ -75,7 +77,9 @@ async def register_user(username: str = Form(""), age: int = Form(...), email: E
             ]
     )
 
-    
+    if image != None:
+        image_uid = await save_image(image, new_user.id)
+
         new_user = add_new_user(new_user, image_uid, db)
         if new_user:
             return {
@@ -115,57 +119,61 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 
 
 #Edit an exist user 
-@user_maintain.put("/edit_user", response_model=UserResponse)
-def edit_user(userId: int = Form(...), new_username: str = Form(...), new_age: int = Form(...), new_email: EmailStr = Form(...), new_password: str = Form(...), new_image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
-    if Admin:
-        user = user_tools.found_user_by_id(userId, db)
-        if user:
-            new_user = UserRegister(
-                        username=new_username,
-                        age=new_age,
-                        email=new_email,
-                        password=new_password
-                    )
+@user_maintain.put("/edit_user", response_model=EditResponse)
+async def edit_user(userId: int = Form(...), new_username: str = Form(...), new_age: int = Form(...), new_email: EmailStr = Form(...), new_password: str = Form(...), new_image: UploadFile = File(default=None), Admin = Depends(get_admin), db: Session = Depends(get_db)):
+        older_user = user_tools.found_user_by_id(userId, db)
+        if older_user:
+            older_image = older_user.image
+            try:
+                new_user = UserRegister(
+                    username=new_username,
+                    age=new_age,
+                    email=new_email,
+                    password=new_password
+                )
+            except ValidationError as exc:
+                raise HTTPException(
+                    status_code=422,
+                    detail=[
+                        {
+                            "loc": list(error["loc"]),
+                            "msg": error["msg"]
+                        }
+                        for error in exc.errors()
+                    ]
+            )
             
-            older_img_name = user.image
-            older_img_path = upload_path / older_img_name
 
-        
+            if new_image != None:
+                image_uid = await save_image(new_image, older_image)
+                user_edited = user_edit(new_user, older_user, image_uid, db)
+                if user_edited:
+                    return {
+                        "message": "User edited successfully",
+                        "data": user_edited
+                    }
 
-            extension = Path(new_image.filename).suffix
-            uuid_image = f"{uuid.uuid4()}{extension}"
-
-            file_path = upload_path / uuid_image
-            with file_path.open("wb") as buffer:
-                shutil.copyfileobj(new_image.file, buffer)
-         
-            user.username = new_user.username
-            user.age = new_user.age
-            user.email = new_user.email
-            user.password = hashed_password(new_user.password)
-            user.image = uuid_image
-
-            db.commit()
-            db.refresh(user)
-            return user
+            else:
+                user_edited = user_edit(new_user, older_user, older_image, db)
+                if user_edited:
+                    return {
+                        "message": "User edited successfully",
+                        "data": user_edited
+                    }
         raise UserNotFound()
 
-    raise AdminRequired()
-
-
 #delete an exist user
-@user_maintain.delete("/delete_user", response_model=UserResponse)
+@user_maintain.delete("/delete_user", response_model=DeleteResponse)
 def delete_user(id: int, Admin = Depends(get_admin), db: Session = Depends(get_db)):
-    if Admin:
         user = user_tools.found_user_by_id(id, db)
         if user:
-            db.delete(user)
-            db.commit()
-
-            return user
+            user_tools.delete_user(user, db)
+            return {
+                "message": "User deleted successfully",
+                "data": user
+            }
         raise HTTPException(status_code=404, detail="User was not found")
-    raise AdminRequired()
-
+       
 #User for get admin role
 @user_maintain.post("/get_admin")
 def get_admin_role(id: int, db: Session = Depends(get_db)):
