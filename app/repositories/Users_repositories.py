@@ -21,4 +21,13 @@ class UserRepository:
     def get_users(db):
         return db.execute(
             select(Users)).all
+    
+    def delete_user(self, user, db):
+        db.delete(user)
+        db.commit()
+
+    def update_user(self, user, db):
+        db.commit()
+        db.refresh(user)
+        return user
 

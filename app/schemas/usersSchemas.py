@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator, EmailStr
+from pydantic import BaseModel, ConfigDict, field_validator, EmailStr
 
 
 #--------INPUT SCHEMAS-------------
@@ -58,12 +58,14 @@ class UserEdit(User):
 
 #User output response
 class UserResponse(BaseModel):
-   id: int
-   username: str
-   email: str
-   age: int
-   role: str
-   image: str
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    username: str
+    email: str
+    age: int
+    role: str
+    image: str
 
 class RegisterResponse(BaseModel):
     message: str
@@ -74,3 +76,11 @@ class LoginResponse(BaseModel):
     message: str
     access_token: str
     token_type: str
+
+class EditResponse(BaseModel):
+    message: str
+    data: UserResponse
+
+class DeleteResponse(BaseModel):
+    message: str
+    data: UserResponse
