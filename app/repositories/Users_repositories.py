@@ -18,3 +18,7 @@ class UserRepository:
 
         return user
 
+    def get_users(db):
+        return db.execute(
+            select(Users)).all
+
