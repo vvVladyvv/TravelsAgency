@@ -75,33 +75,7 @@ async def register_user(username: str = Form(""), age: int = Form(...), email: E
             ]
     )
 
-    if image != None: 
-        max_size = 5 * 1024 * 1024
-        size = await image.read()
-        if len(size) > max_size:
-            raise HTTPException(
-                status_code=413,
-                detail="File too large"
-            )
-        #Extract suffix of file and restrict 3 types of suffix
-        extension = Path(image.filename).suffix.lower()
-        if extension not in [".jpg", ".png", ".jpeg"]:
-            raise HTTPException(
-                status_code=400,
-                detail="Format supported is (.jpg, .jpeg, .png)"
-            )
-        #Generate file name
-        image_uid = f"{uuid.uuid4()}{extension}"
-        #Generate path of the file
-        file_path = upload_path / image_uid
-
-        #Reset cursor inside image bytes
-        await image.seek(0)
-
-        #Open file as buffer with "write" and "bytes" permissions, for modify it, then copy content in image inside our buffer object
-        with file_path.open("wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
-
+    
         new_user = add_new_user(new_user, image_uid, db)
         if new_user:
             return {
@@ -128,17 +102,15 @@ def login_user(data: UserLogin, db: Session = Depends(get_db)):
 #Get all users from db
 @user_maintain.get("/get_users", response_model=list[UserResponse])
 def get_users(Admin = Depends(get_admin), db: Session = Depends(get_db)):
-    if Admin:
-        user = db.query(Users).all()
-        return user
-    raise AdminRequired()
+        return user_tools.get_users(db)
+        
 
 
 #Get a specific user from db
 @user_maintain.post("/get_user", response_model=UserResponse)
 def get_user(user_id: int, db: Session = Depends(get_db)):
-    user = user_tools.found_user_by_id(user_id, db)
-    return user
+    return user_tools.found_user_by_id(user_id, db)
+   
    
 
 
