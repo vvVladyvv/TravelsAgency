@@ -138,11 +138,13 @@ async function edit_user(userId, token) {
         new_data.append("new_age", new_age)
         new_data.append("new_email", new_email)
         new_data.append("new_password", new_password)
-        new_data.append("new_image", new_image)
+        if (new_image) {
+            new_data.append("new_image", new_image)
+        }
 
 
-
-        const response = await fetch(
+        try{
+            const response = await fetch(
             "/user_maintain/edit_user",
             {
                 method: "PUT",
@@ -151,7 +153,33 @@ async function edit_user(userId, token) {
                 },
                 body: new_data
             }
-        )
+
+        
+            )
+        const data = await response.json()
+        if (response.ok) {
+                alert(data.message)
+                return window.location.href = "/users_management";
+            }else{
+                if (Array.isArray(data.detail)) {
+                    let message = "";
+
+                    for (const issue of data.detail) {
+                        message += issue.loc[issue.loc.length - 1]
+                            + ": " + issue.msg + "\n";
+                    }
+
+                    alert(message);
+                } else {
+                    alert("Register failed: " + data.detail);
+                }
+            }
+        
+        }catch (error){
+            alert("Server Response: " + error.message);
+        }
+        
+
     })
 }
 
