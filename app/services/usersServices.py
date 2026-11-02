@@ -40,16 +40,14 @@ def verified_user(data, db):
     raise InvalidCredentials()
 
 
-def user_edit(data, db):
-    checked = user_tools.found_user_by_id(data.id, db)
-    if checked:
-        checked.username = data.username
-        checked.age = data.age
-        checked.email = data.email
+def user_edit(new_user, old_user, new_image, db):
+    old_user.username = new_user.username
+    old_user.age = new_user.age
+    old_user.email = new_user.email
+    old_user.password = hashed_password(new_user.password)
+    old_user.image = new_image
 
-        db.commit()
-        return checked
-    raise UserNotFound()
+    return user_tools.update_user(old_user, db)
 
 
 def admin_role(data, db):
