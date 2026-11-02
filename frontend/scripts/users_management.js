@@ -111,15 +111,26 @@ async function delete_user(userId, token) {
     delete_btn.addEventListener("click", async (e) => {
         e.preventDefault()
 
-        const response = await fetch(
-            `/user_maintain/delete_user?id=${userId}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${token}`
+        try {
+            const response = await fetch(
+                `/user_maintain/delete_user?id=${userId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
                 }
+            )
+            const data = await response.json()
+            if (response.ok) {
+                alert(data.message)
+                return window.location.href = "/users_management";
+            } else {
+                alert("Delete failed: " + data.detail);
             }
-        )
+        } catch (error) {
+            alert("Server Response: " + error.message);
+        }
     })
 }
 
