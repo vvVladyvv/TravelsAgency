@@ -21,6 +21,7 @@ from app.services.image_services import save_image
 #Auth flow and exceptions handle
 from app.security.authorization import get_current_user, get_admin
 from app.exceptions.userExceptions import AdminRequired
+from app.exceptions.travelsExceptions import TravelNotFound
 
 
 
@@ -82,8 +83,7 @@ def Reserve_Travel(data:Reserve, user_id = Depends(get_current_user), db: Sessio
 #Endpoint for get all travels
 @travels.get("/get_travels")
 def get_travels(db: Session = Depends(get_db)):
-    travels = db.query(Travels).all()
-    return travels
+    return travel_repository.get_all_travels(db)
 
 @travels.get("/tendence_travels")
 def travels_tendences(db: Session = Depends(get_db)):
@@ -95,37 +95,14 @@ def travels_tendences(db: Session = Depends(get_db)):
 #Get a specific travel in db
 @travels_maintain.post("/get_travel")
 def get_travel(travel_id: int, admin = Depends(AdminRequired), db: Session = Depends(get_db)):
-    if admin:
-        return db.query(Travels).filter(Travels.id == travel_id).first()
+    return travel_repository.search_travel_by_id(travel_id, db)
             
 
 
 #Edit a travel
 @travels_maintain.put("/edit_travel")
 async def edit_travel(travelId: int = Form(...), destination: str = Form(...), activity: str = Form(...), price: float = Form(...), available_seats: int = Form(...), duration: int = Form(...), image: UploadFile = File(...), Admin = Depends(get_admin), db: Session = Depends(get_db)):
-    if Admin:
-       size = await image.read()
-       max_size = 5 + (1024 * 1024)
-       if len(size) > max_size:
-           raise HTTPException(
-               status_code=413,
-               detail="file too large"
-           )
-       extension = Path(image.filename).suffix
-       if extension not in [".jpg", ".png", ".jpeg"]:
-           raise HTTPException(
-               status_code=400,
-               detail="Format supported is (.jpg, .jpeg, .png)"
-            )
-
-       image_file = f'{uuid.uuid4()}{extension}'
-       file_path = upload_dir / image_file
-
-       await image.seek(0)
-
-       with file_path.open("wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
-
+    try:
         travel_Data = CreateTravel(
             destination=destination,
             activity=activity,
@@ -133,23 +110,29 @@ async def edit_travel(travelId: int = Form(...), destination: str = Form(...), a
             available_seats=available_seats,
             duration=duration
         )
+    except ValidationError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=[
+                {
+                    "loc": list(error["loc"]),
+                    "msg": error["msg"]
+                }
+                for error in exc.errors()
+            ]
+        )
+    
 
-        return travel_edit(travelId, travel_Data, image_file, db)
+    image_file = await save_image(image)
+    return travel_edit(travelId, travel_Data, image_file, db)
        
-    raise AdminRequired()
 
 
 #Delete a travel
 @travels_maintain.delete("/delete_travel")
 def delete_travel(id: int, Admin = Depends(get_admin), db: Session = Depends(get_db)):
-    if Admin:
         travel = TravelRepository.search_travel_by_id(id, db)
         if travel:
-            db.delete(travel)
-            db.commit()
-
-            return travel
-        raise HTTPException(status_code=404, detail="Travel was not found")
-    raise AdminRequired()
-    
+            return travel_repository.delete_travel(travel, db)
+        raise TravelNotFound()
 
