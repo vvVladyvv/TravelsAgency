@@ -21,3 +21,15 @@ class TravelRepository:
 
         return travel
 
+    def get_all_travels(self, db):
+        return db.execute(select(Travels)).scalars().all()
+
+    def edit_travel(self, travel, db):
+        db.commit()
+        db.refresh(travel)
+
+        return travel
+
+    def delete_travel(self, travel, db):
+        db.delete(travel)
+        db.commit()

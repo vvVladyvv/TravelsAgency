@@ -36,10 +36,7 @@ def travel_edit(travelId, data, img, db):
         travel.duration = data.duration
         travel.image = img
 
-        db.commit()
-        db.refresh(travel)
-
-        return travel
+        return travel_tools.edit_travel(travel, db)
 
     raise TravelNotFound()
 
