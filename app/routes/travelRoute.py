@@ -16,6 +16,7 @@ from app.schemas.travelSchemas import CreateTravel, Reserve
 from app.services.travelServices import create_travel, travel_edit, get_tendences
 from app.repositories.Travels_repositories import TravelRepository
 from app.services.booking_services import reserve_travel
+from app.services.image_services import save_image
 
 #Auth flow and exceptions handle
 from app.security.authorization import get_current_user, get_admin
@@ -47,46 +48,30 @@ upload_dir.mkdir(exist_ok=True)
 @travels.post("/create_travel")
 async def new_travel(destination: str = Form(...), activity: str = Form(...) , price: int = Form(...), available_seats: int = Form(...), duration: int = Form(...), image: UploadFile = File(...), admin = Depends(get_admin) , db: Session = Depends(get_db)):
     #Verify size of the file
-    if admin:
-        max_size = 5 + (1024 * 1024)
-        size = await image.read()
-        if len(size) > max_size:
-            raise HTTPException(
-                status_code=413,
-                detail="File too large"
-            )
-        #Extract suffix of file and restrict 3 types of suffix
-        extension = Path(image.filename).suffix
-        if extension not in [".jpg", ".png", ".jpeg"]:
-            raise HTTPException(
-                status_code=400,
-                detail="Format supported is (.jpg, .jpeg, .png)"
-            )
-        #Generate file name
-        image_uid = f"{uuid.uuid4()}{extension}"
-        #Generate path of the file
-        file_path = upload_dir / image_uid
 
-        #Reset cursor inside image bytes
-        await image.seek(0)
-
-        #Open file as buffer with "write" and "bytes" permissions, for modify it, then copy content in image inside our buffer object
-        with file_path.open("wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
-
-       
-
+    try:
         travel_data = CreateTravel(
             destination=destination,
             activity=activity,
             price=price,
             available_seats=available_seats,
             duration=duration,
-            image=image_uid
+            image=image
+        )
+    except ValidationError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=[
+                {
+                    "loc": list(error["loc"]),
+                    "msg": error["msg"]
+                }
+                for error in exc.errors()
+            ]
         )
 
-        return create_travel(travel_data, image_uid, db)
-    raise AdminRequired()
+    image_uid = save_image(image)
+    return create_travel(travel_data, image_uid, db)
 
 #Endpoint for reserve a travel
 @travels.post("/reserve_travel", status_code=201)
