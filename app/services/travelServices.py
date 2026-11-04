@@ -40,7 +40,7 @@ def travel_edit(travelId, data, img, db):
 
     raise TravelNotFound()
 
-def get_tendences(db):
+def TravelTendences(db):
     time_24h = datetime.now() - timedelta(hours=24)
 
     seats_sold = func.sum(Bookings.companions).label("seats_sold")
@@ -55,16 +55,6 @@ def get_tendences(db):
         .limit(5)
     )
 
-    results = db.execute(stmt).all()
+    results = travel_tools.get_tendences(stmt, db)
 
-    return [
-        {
-            "id": travel.id,
-            "destination": travel.destination,
-            "image": travel.image,
-            "price": travel.price,
-            "available_seats": travel.available_seats,
-            "seats_sold": sold,
-        }
-        for travel, sold in results
-    ]
+    return results

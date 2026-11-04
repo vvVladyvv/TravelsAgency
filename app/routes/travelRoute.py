@@ -13,7 +13,7 @@ from app.database import get_db
 #Schemas
 from app.schemas.travelSchemas import CreateTravel, Reserve
 #Services and repository
-from app.services.travelServices import create_travel, travel_edit, get_tendences
+from app.services.travelServices import create_travel, travel_edit, TravelTendences
 from app.repositories.Travels_repositories import TravelRepository
 from app.services.booking_services import reserve_travel
 from app.services.image_services import save_image
@@ -87,7 +87,7 @@ def get_travels(db: Session = Depends(get_db)):
 
 @travels.get("/tendence_travels")
 def travels_tendences(db: Session = Depends(get_db)):
-    travels = get_tendences(db)
+    travels = TravelTendences(db)
     return travels
 
 #--------------Travels maintain routes (Admin only) ----------------
