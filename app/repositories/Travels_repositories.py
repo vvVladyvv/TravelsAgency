@@ -1,5 +1,8 @@
 from app.models.db_travels import Travels
 from sqlalchemy import select
+from datetime import datetime, timedelta
+from sqlalchemy import func
+from app.models.db_booking import Bookings
 
 
 class TravelRepository:
@@ -33,3 +36,18 @@ class TravelRepository:
     def delete_travel(self, travel, db):
         db.delete(travel)
         db.commit()
+
+    def get_tendences(self, stmt, db):
+        results = db.execute(stmt).all()
+
+        return [
+            {
+            "id": travel.id,
+            "destination": travel.destination,
+            "image": travel.image,
+            "price": travel.price,
+            "available_seats": travel.available_seats,
+            "seats_sold": sold,
+            }
+            for travel, sold in results
+        ]
