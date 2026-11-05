@@ -78,7 +78,7 @@ async def register_user(username: str = Form(""), age: int = Form(...), email: E
     )
 
     if image != None:
-        image_uid = await save_image(image, new_user.id)
+        image_uid = await save_image(image)
 
         new_user = add_new_user(new_user, image_uid, db)
         if new_user:
