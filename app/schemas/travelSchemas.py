@@ -2,14 +2,20 @@ from pydantic import BaseModel, ConfigDict, field_validator
 
 #----------Input Travels schemas---------------
 
-#Schema for create Travel
-class CreateTravel(BaseModel):
+#Shared travel fields used by input and response schemas
+class TravelBase(BaseModel):
     destination: str
     activity: str
     price: int
     available_seats: int
     duration: int
     image: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+#Schema for create Travel
+class CreateTravel(TravelBase):
 
     @field_validator('destination')
     @classmethod
@@ -47,7 +53,10 @@ class CreateTravel(BaseModel):
             raise ValueError('Duration must be a positive integer and greater than 0')
         return v
 
-    model_config = ConfigDict(from_attributes=True)
+
+
+class TravelResponse(TravelBase):
+    pass
 
 #Schema for reserve a travel
 class Reserve(BaseModel):

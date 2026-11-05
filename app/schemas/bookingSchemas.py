@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import datetime
-from app.schemas.travelSchemas import CreateTravel
+from app.schemas.travelSchemas import TravelResponse
 
 class BookingBase(BaseModel):
     travel_id: int
@@ -15,6 +15,6 @@ class BookingResponse(BookingBase):
     status: str
     cost: float
 
-    travel: CreateTravel
+    travel: TravelResponse
 
     model_config = ConfigDict(from_attributes=True)
