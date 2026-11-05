@@ -30,7 +30,7 @@ if (form) {
             const data = await response.json();
             if (response.ok){
                 alert("Server Response: " + data.message);
-                return window.location.href = "/login";
+                return window.location.href = "/";
             }
             
 
