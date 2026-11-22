@@ -1,3 +1,10 @@
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
 body {
     margin: 0;
     background: #f7f6f2;
@@ -9,7 +16,9 @@ body {
 #header{
     background-color: rgb(0, 0, 0);
     padding: 1%;
-    border-radius: 50px;
+    border-radius: 20px;
+    position: relative;
+
 }
 
 .logo a{
@@ -31,13 +40,44 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+   
+}
+
+#mobile-menu{
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
 }
 
 .nav-elements{
-    display: flex;
-    gap: 100px;
+    display: none;
+    gap: 30px;
+    margin: 0;
 }
 
+#mobile-menu:hover + .nav-container .nav-elements{
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    position: absolute;
+    top: 100%;
+    right: 16px;
+    z-index: 50;
+}
+
+@media (min-width: 768px) {
+  #mobile-menu {
+    display: none;
+  }
+
+  .nav-elements{
+    display: flex;
+    gap: 30px;
+    margin: 0;
+  }
+
+}
 .nav-elements li{
     list-style: none;
    
