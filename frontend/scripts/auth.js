@@ -39,13 +39,22 @@ async function get_current_user(){
                 </a>
                 <div class="user-extra">
                     <li><a href="/profile.html">Profile</a></li>
-                    <li><a href="/logout.html">Logout</a></li>
+                    <li id="logout-link"><a href="/logout.html">Logout</a></li>
                 </div>
             `
+            const logout_link = document.getElementById("logout-link");
+            logout_link.addEventListener("click", function(event){
+                event.preventDefault();
+                localStorage.removeItem("token");
+                window.location.href = "/";
+            });
         }
+
 
             
 }
+
+
 
 function initializeAuth() {
     if (document.getElementById("user-service")) {
