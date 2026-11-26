@@ -4,6 +4,8 @@ const travel_category = document.querySelectorAll(".category_btn")
 const tendence_Card = document.getElementById("tendence_card")
 const left_btn = document.getElementById("left_btn")
 const right_btn = document.getElementById("right_btn")
+const destination_select = document.getElementById("destination")
+
 
 
 //Get request to obtain travels
@@ -64,6 +66,14 @@ async function get_travels() {
         image_container.addEventListener("mouseleave", () => {
             card_information.classList.remove("show")
         })
+
+        if(destination_select) {
+            const option = document.createElement("option")
+            option.value = travel.destination
+            option.innerText = travel.destination
+            destination_select.append(option)
+        }
+
     });
 
 }

@@ -7,10 +7,14 @@ html, body {
 
 body {
     margin: 0;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
     background: #f7f6f2;
     color: #172b2a;
     font-family: "Trebuchet MS", "Segoe UI", sans-serif;
 }
+
 
 
 #header{
@@ -153,6 +157,7 @@ body {
 }
 
 #footer{
+    margin-top: auto;
     background-color: rgb(0, 0, 0);
     padding: 1%;
     color: white;
