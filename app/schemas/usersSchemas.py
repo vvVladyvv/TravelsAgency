@@ -59,6 +59,7 @@ class UserEdit(User):
 #User output response
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+    id: int
     username: str
     email: str
     age: int
